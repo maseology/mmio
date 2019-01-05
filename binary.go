@@ -165,6 +165,15 @@ func ReadInt64(b *bytes.Reader) int64 {
 	return i
 }
 
+// ReadUInt64 reads next unsigned-int32 from buffer
+func ReadUInt64(b *bytes.Reader) uint64 {
+	var i uint64
+	if err := binary.Read(b, binary.LittleEndian, &i); err != nil {
+		fmt.Println("ReadUInt64 failed:", err)
+	}
+	return i
+}
+
 // ReadLines reads and returns string lines from binary file
 func ReadLines(b *bytes.Reader) []string {
 	return strings.FieldsFunc(ReadString(b), lineParser)
