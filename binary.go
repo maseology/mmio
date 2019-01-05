@@ -84,6 +84,15 @@ func ReadString(b *bytes.Reader) string {
 	return string(str)
 }
 
+// ReadFloat32 reads next float64 from buffer
+func ReadFloat32(b *bytes.Reader) float32 {
+	var f float32
+	if err := binary.Read(b, binary.LittleEndian, &f); err != nil {
+		fmt.Println("ReadFloat32 failed:", err)
+	}
+	return f
+}
+
 // ReadFloat64 reads next float64 from buffer
 func ReadFloat64(b *bytes.Reader) float64 {
 	var f float64
@@ -93,11 +102,65 @@ func ReadFloat64(b *bytes.Reader) float64 {
 	return f
 }
 
+// ReadUInt8 reads next uint8 from buffer
+func ReadUInt8(b *bytes.Reader) uint8 {
+	var i uint8
+	if err := binary.Read(b, binary.LittleEndian, &i); err != nil {
+		fmt.Println("ReadUInt8 failed:", err)
+	}
+	return i
+}
+
+// ReadInt8 reads next int8 (signed byte) from buffer
+func ReadInt8(b *bytes.Reader) int8 {
+	var i int8
+	if err := binary.Read(b, binary.LittleEndian, &i); err != nil {
+		fmt.Println("ReadInt8 failed:", err)
+	}
+	return i
+}
+
+// ReadUInt16 reads next uint16 from buffer
+func ReadUInt16(b *bytes.Reader) uint16 {
+	var i uint16
+	if err := binary.Read(b, binary.LittleEndian, &i); err != nil {
+		fmt.Println("ReadUInt16 failed:", err)
+	}
+	return i
+}
+
+// ReadUInt32 reads next uint32 from buffer
+func ReadUInt32(b *bytes.Reader) uint32 {
+	var i uint32
+	if err := binary.Read(b, binary.LittleEndian, &i); err != nil {
+		fmt.Println("ReadUInt32 failed:", err)
+	}
+	return i
+}
+
+// ReadUInt64 reads next uint64 from buffer
+func ReadUInt64(b *bytes.Reader) uint64 {
+	var i uint64
+	if err := binary.Read(b, binary.LittleEndian, &i); err != nil {
+		fmt.Println("ReadUInt64 failed:", err)
+	}
+	return i
+}
+
 // ReadInt32 reads next int32 from buffer
 func ReadInt32(b *bytes.Reader) int32 {
 	var i int32
 	if err := binary.Read(b, binary.LittleEndian, &i); err != nil {
 		fmt.Println("ReadInt32 failed:", err)
+	}
+	return i
+}
+
+// ReadInt64 reads next int64 from buffer
+func ReadInt64(b *bytes.Reader) int64 {
+	var i int64
+	if err := binary.Read(b, binary.LittleEndian, &i); err != nil {
+		fmt.Println("ReadInt64 failed:", err)
 	}
 	return i
 }
