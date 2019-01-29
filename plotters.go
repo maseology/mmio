@@ -3,7 +3,9 @@ package mmio
 import (
 	"image/color"
 	"math"
+	"sort"
 
+	"github.com/maseology/mmaths"
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/plotter"
 	"gonum.org/v1/plot/plotutil"
@@ -67,6 +69,42 @@ func ObsSim(fp string, o, s []float64) {
 	p.Add(ps, po)
 	p.Legend.Add("obs", po)
 	p.Legend.Add("sim", ps)
+
+	// Save the plot to a PNG file.
+	if err := p.Save(12*vg.Inch, 4*vg.Inch, fp); err != nil {
+		panic(err)
+	}
+}
+
+// ObsSimFDC used to create simple observed vs. simulated flow-duration curves
+func ObsSimFDC(fp string, o, s []float64) {
+	p, err := plot.New()
+	if err != nil {
+		panic(err)
+	}
+
+	// p.Title.Text = fp
+	p.X.Label.Text = ""
+	p.Y.Label.Text = "discharge"
+
+	ps, err := plotter.NewLine(cumulativeDistributionLine(s))
+	if err != nil {
+		panic(err)
+	}
+	ps.Color = color.RGBA{R: 255, A: 255}
+
+	po, err := plotter.NewLine(cumulativeDistributionLine(o))
+	if err != nil {
+		panic(err)
+	}
+	po.Color = color.RGBA{B: 255, A: 255}
+
+	// Add the functions and their legend entries.
+	p.Add(ps, po)
+	p.Legend.Add("obs", po)
+	p.Legend.Add("sim", ps)
+	p.Y.Scale = plot.LogScale{}
+	p.Y.Tick.Marker = plot.LogTicks{}
 
 	// Save the plot to a PNG file.
 	if err := p.Save(12*vg.Inch, 4*vg.Inch, fp); err != nil {
@@ -199,6 +237,22 @@ func sequentialLine(v []float64) plotter.XYs {
 			continue
 		}
 		pts[c].X = float64(i)
+		pts[c].Y = v[i]
+		c++
+	}
+	return pts[:c]
+}
+
+func cumulativeDistributionLine(v []float64) plotter.XYs {
+	v = mmaths.OnlyPositive(v)
+	sort.Float64s(v)
+	mmaths.RevF(v)
+	pts, c, x := make(plotter.XYs, len(v)), 0, float64(len(v))/100.
+	for i := range pts {
+		if math.IsNaN(v[i]) {
+			continue
+		}
+		pts[c].X = float64(i) / x
 		pts[c].Y = v[i]
 		c++
 	}
