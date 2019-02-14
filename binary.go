@@ -24,7 +24,6 @@ import (
 
 // OpenBinary creates reader from filepath
 func OpenBinary(filepath string) *bytes.Reader {
-	var err error
 	b, err := ioutil.ReadFile(filepath)
 	if err != nil {
 		log.Fatalf("Fatal error: OpenBinary failed: %v\n", err)
@@ -34,7 +33,6 @@ func OpenBinary(filepath string) *bytes.Reader {
 
 // ReadBinary general binary reader
 func ReadBinary(filepath string, data ...interface{}) error {
-	var err error
 	b, err := ioutil.ReadFile(filepath)
 	if err != nil {
 		fmt.Printf("ReadBinary failed: %v\n", err)
@@ -60,7 +58,7 @@ func ReachedEOF(b *bytes.Reader) bool {
 	return true
 }
 
-// ReadString : reads and returns string from binary file
+// ReadString reads and returns string from binary file
 func ReadString(b *bytes.Reader) string {
 	var blen byte
 	err := binary.Read(b, binary.LittleEndian, &blen)
@@ -173,7 +171,7 @@ func lineParser(r rune) bool {
 	return r == '\r' || r == '\n'
 }
 
-// WriteBinary : general binary writer
+// WriteBinary general binary writer
 func WriteBinary(filepath string, data ...interface{}) error {
 	buf := new(bytes.Buffer)
 	for _, v := range data {
@@ -188,7 +186,7 @@ func WriteBinary(filepath string, data ...interface{}) error {
 	return nil
 }
 
-// ReadBinaryFloats : reads an entire file and returns a slice of d dimensions
+// ReadBinaryFloats reads an entire file and returns a slice of d dimensions
 func ReadBinaryFloats(filepath string, d int) ([][]float64, int, error) {
 	var err error
 	b, err := ioutil.ReadFile(filepath)
@@ -205,6 +203,48 @@ func ReadBinaryFloats(filepath string, d int) ([][]float64, int, error) {
 		if err != nil {
 			fmt.Printf("ReadBinaryFloats failed: %v\n", err)
 			return nil, 0, fmt.Errorf("binary.Read failed: %v", err)
+		}
+		a[i] = v
+	}
+	return a, n, nil
+}
+
+// ReadBinaryInts reads an entire file and returns a slice of d dimensions
+func ReadBinaryInts(filepath string, d int) ([][]int32, int, error) {
+	var err error
+	b, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		return nil, 0, fmt.Errorf("ReadBinaryInts: ioutil.ReadFile failed: %v", err)
+	}
+	buf := bytes.NewReader(b)
+	n := len(b) / 4 / d
+	a := make([][]int32, n, n)
+	for i := 0; i < n; i++ {
+		v := make([]int32, d, d)
+		err := binary.Read(buf, binary.LittleEndian, v)
+		if err != nil {
+			return nil, 0, fmt.Errorf("ReadBinaryInts: binary.Read failed: %v", err)
+		}
+		a[i] = v
+	}
+	return a, n, nil
+}
+
+// ReadBinaryShorts reads an entire file and returns a slice of d dimensions
+func ReadBinaryShorts(filepath string, d int) ([][]int16, int, error) {
+	var err error
+	b, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		return nil, 0, fmt.Errorf("ReadBinaryShorts: ioutil.ReadFile failed: %v", err)
+	}
+	buf := bytes.NewReader(b)
+	n := len(b) / 2 / d
+	a := make([][]int16, n, n)
+	for i := 0; i < n; i++ {
+		v := make([]int16, d, d)
+		err := binary.Read(buf, binary.LittleEndian, v)
+		if err != nil {
+			return nil, 0, fmt.Errorf("ReadBinaryShorts: binary.Read failed: %v", err)
 		}
 		a[i] = v
 	}

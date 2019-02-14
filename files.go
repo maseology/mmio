@@ -3,6 +3,7 @@ package mmio
 import (
 	"io/ioutil"
 	"log"
+	"os"
 	"path/filepath"
 )
 
@@ -21,4 +22,16 @@ func CollectFilesExt(dir, ext string) []string {
 		}
 	}
 	return flst
+}
+
+// FileExists checks if a file exists and returns its size
+func FileExists(fp string) (int64, bool) {
+	if fi, err := os.Stat(fp); err == nil {
+		return fi.Size(), true
+	} else if os.IsNotExist(err) {
+		return 0, false
+	} else {
+		log.Fatal(err)
+		return 0, false
+	}
 }
