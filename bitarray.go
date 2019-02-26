@@ -15,17 +15,6 @@ func BitArray(b []byte) []bool {
 // BitArray1 converts a byte into a slice of boolean
 func BitArray1(b byte) []bool {
 	a := make([]bool, 8)
-	// for p := 0; p < 8; p++ {
-	// 	t := mmaths.BytePow(p)
-	// 	if b&t == t {
-	// 		a[p] = true
-	// 		// fmt.Print("1")
-	// 	} else {
-	// 		a[p] = false
-	// 		// fmt.Print("0")
-	// 	}
-	// }
-	// // fmt.Print("\n")
 	if b&1 == 1 {
 		a[0] = true
 	}

@@ -106,8 +106,8 @@ func (w *CSVwriter) WriteHead(h string) error {
 	return nil
 }
 
-// WriteCSV writes csv from a complete dataset
-func WriteCSV(fp, h string, dat [][]float64) {
+// WriteCSV2d writes csv from a complete dataset dat[row][col]
+func WriteCSV2d(fp, h string, dat [][]interface{}) {
 	csv := NewCSVwriter(fp)
 	defer csv.Close()
 	csv.WriteHead(h)
@@ -115,6 +115,22 @@ func WriteCSV(fp, h string, dat [][]float64) {
 		iv := make([]interface{}, len(ln))
 		for i, v := range ln {
 			iv[i] = v
+		}
+		csv.WriteLine(iv...)
+	}
+}
+
+// WriteCSV writes csv from a complete dataset
+func WriteCSV(fp, h string, d ...[]interface{}) {
+	csv := NewCSVwriter(fp)
+	defer csv.Close()
+	csv.WriteHead(h)
+	nc := len(d)
+	nr := len(d[0])
+	for i := 0; i < nr; i++ {
+		iv := make([]interface{}, nc)
+		for j := 0; j < nc; j++ {
+			iv[j] = d[j][i]
 		}
 		csv.WriteLine(iv...)
 	}

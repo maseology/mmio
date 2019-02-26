@@ -196,9 +196,9 @@ func ReadBinaryFloats(filepath string, d int) ([][]float64, int, error) {
 	}
 	buf := bytes.NewReader(b)
 	n := len(b) / 8 / d
-	a := make([][]float64, n, n)
-	for i := 0; i < n; i++ {
-		v := make([]float64, d, d)
+	a := make([][]float64, d)
+	for i := 0; i < d; i++ {
+		v := make([]float64, n)
 		err := binary.Read(buf, binary.LittleEndian, v)
 		if err != nil {
 			fmt.Printf("ReadBinaryFloats failed: %v\n", err)
@@ -218,9 +218,9 @@ func ReadBinaryInts(filepath string, d int) ([][]int32, int, error) {
 	}
 	buf := bytes.NewReader(b)
 	n := len(b) / 4 / d
-	a := make([][]int32, n, n)
-	for i := 0; i < n; i++ {
-		v := make([]int32, d, d)
+	a := make([][]int32, d)
+	for i := 0; i < d; i++ {
+		v := make([]int32, n)
 		err := binary.Read(buf, binary.LittleEndian, v)
 		if err != nil {
 			return nil, 0, fmt.Errorf("ReadBinaryInts: binary.Read failed: %v", err)
@@ -239,9 +239,9 @@ func ReadBinaryShorts(filepath string, d int) ([][]int16, int, error) {
 	}
 	buf := bytes.NewReader(b)
 	n := len(b) / 2 / d
-	a := make([][]int16, n, n)
-	for i := 0; i < n; i++ {
-		v := make([]int16, d, d)
+	a := make([][]int16, d)
+	for i := 0; i < d; i++ {
+		v := make([]int16, n)
 		err := binary.Read(buf, binary.LittleEndian, v)
 		if err != nil {
 			return nil, 0, fmt.Errorf("ReadBinaryShorts: binary.Read failed: %v", err)
