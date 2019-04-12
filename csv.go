@@ -129,9 +129,15 @@ func WriteCSV(fp, h string, d ...[]interface{}) {
 	nr := len(d[0])
 	for i := 0; i < nr; i++ {
 		iv := make([]interface{}, nc)
+		notnil := false
 		for j := 0; j < nc; j++ {
+			if d[j][i] != nil {
+				notnil = true
+			}
 			iv[j] = d[j][i]
 		}
-		csv.WriteLine(iv...)
+		if notnil {
+			csv.WriteLine(iv...)
+		}
 	}
 }
