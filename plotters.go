@@ -83,17 +83,22 @@ func ObsSimFDC(fp string, o, s []float64) {
 		panic(err)
 	}
 
+	// create copies
+	ocopy, scopy := make([]float64, len(o)), make([]float64, len(s))
+	copy(ocopy, o)
+	copy(scopy, s)
+
 	// p.Title.Text = fp
 	p.X.Label.Text = ""
 	p.Y.Label.Text = "discharge"
 
-	ps, err := plotter.NewLine(cumulativeDistributionLine(s))
+	ps, err := plotter.NewLine(cumulativeDistributionLine(scopy))
 	if err != nil {
 		panic(err)
 	}
 	ps.Color = color.RGBA{R: 255, A: 255}
 
-	po, err := plotter.NewLine(cumulativeDistributionLine(o))
+	po, err := plotter.NewLine(cumulativeDistributionLine(ocopy))
 	if err != nil {
 		panic(err)
 	}
