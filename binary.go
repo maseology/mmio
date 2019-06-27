@@ -250,3 +250,23 @@ func ReadBinaryShorts(filepath string, d int) ([][]int16, int, error) {
 	}
 	return a, n, nil
 }
+
+// ReadBinaryIMAP reads a map[int]int for an entire file
+func ReadBinaryIMAP(filepath string) (map[int]int, error) {
+	var err error
+	b, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		return nil, fmt.Errorf("ReadBinaryIMAP: ioutil.ReadFile failed: %v", err)
+	}
+	buf := bytes.NewReader(b)
+	n := len(b) / 8
+	m := make(map[int]int, n)
+	v := make([]int32, 2*n)
+	if err := binary.Read(buf, binary.LittleEndian, v); err != nil {
+		return nil, fmt.Errorf("ReadBinaryIMAP: binary.Read failed: %v", err)
+	}
+	for i := 0; i < n; i++ {
+		m[int(v[2*i])] = int(v[2*i+1])
+	}
+	return m, nil
+}
