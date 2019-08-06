@@ -71,7 +71,7 @@ func ObsSim(fp string, o, s []float64) {
 	p.Legend.Add("sim", ps)
 
 	// Save the plot to a PNG file.
-	if err := p.Save(12*vg.Inch, 4*vg.Inch, fp); err != nil {
+	if err := p.Save(24*vg.Inch, 4*vg.Inch, fp); err != nil {
 		panic(err)
 	}
 }
