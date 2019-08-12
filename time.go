@@ -1,6 +1,8 @@
 package mmio
 
-import "time"
+import (
+	"time"
+)
 
 const unixToInternal int64 = 62135596800 // (1969*365 + 1969/4 - 1969/100 + 1969/400) * 24 * 60 * 60 // number of seconds between Year 1 and 1970 (62135596800 seconds)
 
@@ -40,4 +42,14 @@ func MonthDays(year Yr, month Mo) int {
 		return 29
 	}
 	return mdays[month]
+}
+
+// MMdate returns a string date formatted yymmdd
+func MMdate(d time.Time) string {
+	return d.Format("060102")
+}
+
+// MMtime returns a string date formatted yymmdd_hhmmss
+func MMtime(d time.Time) string {
+	return d.Format("060102_150405")
 }
