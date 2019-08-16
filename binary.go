@@ -186,6 +186,23 @@ func WriteBinary(filepath string, data ...interface{}) error {
 	return nil
 }
 
+// WriteIMAP general map writer
+func WriteIMAP(filepath string, data map[int]int) error {
+	buf := new(bytes.Buffer)
+	for k, v := range data {
+		if err := binary.Write(buf, binary.LittleEndian, int32(k)); err != nil {
+			fmt.Println("WriteBinary failed:", err)
+		}
+		if err := binary.Write(buf, binary.LittleEndian, int32(v)); err != nil {
+			fmt.Println("WriteBinary failed:", err)
+		}
+	}
+	if err := ioutil.WriteFile(filepath, buf.Bytes(), 0644); err != nil { // see: https://en.wikipedia.org/wiki/File_system_permissions
+		return fmt.Errorf("ioutil.WriteFile failed: %v", err)
+	}
+	return nil
+}
+
 // ReadBinaryFloats reads an entire file and returns a slice of d dimensions
 func ReadBinaryFloats(filepath string, d int) ([][]float64, int, error) {
 	var err error

@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 // CollectFilesExt returns a list of files of a given extension from a directory.
@@ -42,4 +43,18 @@ func DirExists(path string) bool {
 		return false
 	}
 	return true
+}
+
+// FileName returns the file name
+func FileName(fp string, withExtension bool) string {
+	fn := filepath.Base(fp)
+	if !withExtension {
+		return strings.TrimSuffix(fn, filepath.Ext(fp))
+	}
+	return fn
+}
+
+// RemoveExtension returns the file path without its extension
+func RemoveExtension(fp string) string {
+	return strings.TrimSuffix(fp, filepath.Ext(fp))
 }

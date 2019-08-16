@@ -20,7 +20,7 @@ func ReadCSV(filepath string) ([][]float64, error) {
 	defer f.Close()
 	var fout [][]float64
 	for rec := range processCSV(io.Reader(f)) {
-		var f1 []float64
+		f1 := make([]float64, 0, len(rec))
 		for i, c := range rec {
 			f2, err := strconv.ParseFloat(c, 64)
 			if err != nil {
@@ -35,7 +35,7 @@ func ReadCSV(filepath string) ([][]float64, error) {
 }
 
 func processCSV(rc io.Reader) (ch chan []string) {
-	ch = make(chan []string, 10)
+	ch = make(chan []string)
 	go func() {
 		r := csv.NewReader(rc)
 		if _, err := r.Read(); err != nil { //read header
