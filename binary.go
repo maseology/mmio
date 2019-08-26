@@ -191,10 +191,10 @@ func WriteIMAP(filepath string, data map[int]int) error {
 	buf := new(bytes.Buffer)
 	for k, v := range data {
 		if err := binary.Write(buf, binary.LittleEndian, int32(k)); err != nil {
-			fmt.Println("WriteBinary failed:", err)
+			log.Fatalln("WriteBinary failed:", err)
 		}
 		if err := binary.Write(buf, binary.LittleEndian, int32(v)); err != nil {
-			fmt.Println("WriteBinary failed:", err)
+			log.Fatalln("WriteBinary failed:", err)
 		}
 	}
 	if err := ioutil.WriteFile(filepath, buf.Bytes(), 0644); err != nil { // see: https://en.wikipedia.org/wiki/File_system_permissions
