@@ -15,16 +15,22 @@ func NewTimer() Timer {
 	return t
 }
 
-// TimerReset start a timer
-func (t *Timer) TimerReset() {
+// Reset start a timer
+func (t *Timer) Reset() {
 	t.t = time.Now()
 }
 
-// TimerPrint reports lap time
-func (t *Timer) TimerPrint(msg string) {
+// Print reports current time
+func (t *Timer) Print(msg string) {
 	if len(msg) == 0 {
 		fmt.Println(time.Now().Sub(t.t))
 	} else {
 		fmt.Printf(" %s - %v\n", msg, time.Now().Sub(t.t))
 	}
+}
+
+// Lap reports lap time (resets timer)
+func (t *Timer) Lap(msg string) {
+	t.Print(msg)
+	t.Reset()
 }
