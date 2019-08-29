@@ -8,6 +8,15 @@ import (
 	"strings"
 )
 
+// DeleteFile deletes the specified file
+func DeleteFile(fp string) {
+	if _, ok := FileExists(fp); ok {
+		if err := os.Remove(fp); err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+
 // CollectFilesExt returns a list of files of a given extension from a directory.
 // directories should end with "/" and extensions start with ".".
 func CollectFilesExt(dir, ext string) []string {

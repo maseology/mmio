@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"strings"
 )
 
@@ -198,7 +199,39 @@ func WriteIMAP(filepath string, data map[int]int) error {
 		}
 	}
 	if err := ioutil.WriteFile(filepath, buf.Bytes(), 0644); err != nil { // see: https://en.wikipedia.org/wiki/File_system_permissions
-		return fmt.Errorf("ioutil.WriteFile failed: %v", err)
+		return fmt.Errorf(" ioutil.WriteIMAP failed: %v", err)
+	}
+	return nil
+}
+
+// WriteRMAP general map writer
+func WriteRMAP(filepath string, data map[int]float64, append bool) error {
+	buf := new(bytes.Buffer)
+	for k, v := range data {
+		if err := binary.Write(buf, binary.LittleEndian, int32(k)); err != nil {
+			log.Fatalln("WriteBinary failed:", err)
+		}
+		if err := binary.Write(buf, binary.LittleEndian, v); err != nil {
+			log.Fatalln("WriteBinary failed:", err)
+		}
+	}
+
+	if append {
+		// If the file doesn't exist, create it, or append to the file
+		f, err := os.OpenFile(filepath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+		if err != nil {
+			return err
+		}
+		if _, err := f.Write(buf.Bytes()); err != nil {
+			return err
+		}
+		if err := f.Close(); err != nil {
+			return err
+		}
+	} else {
+		if err := ioutil.WriteFile(filepath, buf.Bytes(), 0644); err != nil { // see: https://en.wikipedia.org/wiki/File_system_permissions
+			return fmt.Errorf(" ioutil.WriteRMAP failed: %v", err)
+		}
 	}
 	return nil
 }
