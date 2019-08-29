@@ -12,7 +12,7 @@ import (
 	"gonum.org/v1/plot/vg"
 )
 
-// Histo : create generic histogram
+// Histo creates a generic histogram
 func Histo(fp string, x []float64, nbins int) {
 	p, err := plot.New()
 	if err != nil {
@@ -42,7 +42,7 @@ func Histo(fp string, x []float64, nbins int) {
 	}
 }
 
-// ObsSim used to create simple observed vs. simulated hydrographs
+// ObsSim is used to create simple observed vs. simulated hydrographs
 func ObsSim(fp string, o, s []float64) {
 	p, err := plot.New()
 	if err != nil {
@@ -76,7 +76,7 @@ func ObsSim(fp string, o, s []float64) {
 	}
 }
 
-// ObsSimFDC used to create simple observed vs. simulated flow-duration curves
+// ObsSimFDC is used to create simple observed vs. simulated flow-duration curves
 func ObsSimFDC(fp string, o, s []float64) {
 	p, err := plot.New()
 	if err != nil {
@@ -140,7 +140,7 @@ func Wbal(fp string, f, a, q, g, s []float64) {
 	}
 }
 
-// Scatter : create generic scatter plot
+// Scatter creates a generic scatter plot
 func Scatter(fp string, x, y []float64) {
 	p, err := plot.New()
 	if err != nil {
@@ -162,7 +162,7 @@ func Scatter(fp string, x, y []float64) {
 	}
 }
 
-// Line : generic line plot
+// Line creates a generic line plot
 func Line(fp string, x []float64, ys map[string][]float64) {
 	p, err := plot.New()
 	if err != nil {
@@ -180,12 +180,12 @@ func Line(fp string, x []float64, ys map[string][]float64) {
 	}
 
 	// Save the plot to a PNG file.
-	if err := p.Save(12*vg.Inch, 4*vg.Inch, fp); err != nil {
+	if err := p.Save(24*vg.Inch, 4*vg.Inch, fp); err != nil {
 		panic(err)
 	}
 }
 
-// LinePoints1 : generic plot of 1 line
+// LinePoints1 creates a generic plot of one xy set of data only
 func LinePoints1(fp string, x, y []float64) {
 	p, err := plot.New()
 	if err != nil {
@@ -203,7 +203,7 @@ func LinePoints1(fp string, x, y []float64) {
 	}
 }
 
-// LinePoints2 : generic plot of 2 lines
+// LinePoints2 creates a generic plot of lines from 2 sets of xy data
 func LinePoints2(fp string, x, y1, y2 []float64) {
 	p, err := plot.New()
 	if err != nil {
