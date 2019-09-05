@@ -63,6 +63,11 @@ func FileName(fp string, withExtension bool) string {
 	return fn
 }
 
+// GetExtension returns the file path extension
+func GetExtension(fp string) string {
+	return  filepath.Ext(fp)
+}
+
 // RemoveExtension returns the file path without its extension
 func RemoveExtension(fp string) string {
 	return strings.TrimSuffix(fp, filepath.Ext(fp))
