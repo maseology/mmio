@@ -43,7 +43,7 @@ func Histo(fp string, x []float64, nbins int) {
 }
 
 // ObsSim is used to create simple observed vs. simulated hydrographs
-func ObsSim(fp string, o, s []float64) {
+func ObsSim(fp string, o, s, b, x []float64) {
 	p, err := plot.New()
 	if err != nil {
 		panic(err)
@@ -65,13 +65,33 @@ func ObsSim(fp string, o, s []float64) {
 	}
 	po.Color = color.RGBA{B: 255, A: 255}
 
-	// Add the functions and their legend entries.
-	p.Add(ps, po)
-	p.Legend.Add("obs", po)
-	p.Legend.Add("sim", ps)
+	if b != nil {
+		pb, err := plotter.NewLine(sequentialLine(b))
+		if err != nil {
+			panic(err)
+		}
+		pb.Color = color.RGBA{R: 128, B: 64, A: 255}
+		px, err := plotter.NewLine(sequentialLine(x))
+		if err != nil {
+			panic(err)
+		}
+		pb.Color = color.RGBA{G: 128, B: 64, A: 255}
+		// Add the functions and their legend entries.
+		p.Add(ps, po, pb, px)
+		p.Legend.Add("obs", po)
+		p.Legend.Add("sim", ps)
+		p.Legend.Add("bf", pb)
+		p.Legend.Add("xs", px)
+	} else {
+		// Add the functions and their legend entries.
+		p.Add(ps, po)
+		p.Legend.Add("obs", po)
+		p.Legend.Add("sim", ps)
+	}
+	p.Legend.Top = true
 
 	// Save the plot to a PNG file.
-	if err := p.Save(24*vg.Inch, 4*vg.Inch, fp); err != nil {
+	if err := p.Save(24*vg.Inch, 8*vg.Inch, fp); err != nil {
 		panic(err)
 	}
 }
@@ -178,9 +198,10 @@ func Line(fp string, x []float64, ys map[string][]float64) {
 	if err != nil {
 		panic(err)
 	}
+	p.Legend.Top = true
 
 	// Save the plot to a PNG file.
-	if err := p.Save(24*vg.Inch, 4*vg.Inch, fp); err != nil {
+	if err := p.Save(24*vg.Inch, 8*vg.Inch, fp); err != nil {
 		panic(err)
 	}
 }

@@ -17,8 +17,17 @@ func DeleteFile(fp string) {
 	}
 }
 
+// DeleteAllInDirectory deletes all files of a given extension in a specified directory
+// exension format: ".***"
+func DeleteAllInDirectory(dir, ext string) {
+for _, fp := range CollectFilesExt(dir,ext) {
+	DeleteFile(fp)
+}
+}
+
 // CollectFilesExt returns a list of files of a given extension from a directory.
 // directories should end with "/" and extensions start with ".".
+// exension format: ".***"
 func CollectFilesExt(dir, ext string) []string {
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
