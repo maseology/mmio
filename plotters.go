@@ -201,7 +201,7 @@ func Line(fp string, x []float64, ys map[string][]float64) {
 	p.Legend.Top = true
 
 	// Save the plot to a PNG file.
-	if err := p.Save(24*vg.Inch, 8*vg.Inch, fp); err != nil {
+	if err := p.Save(48*vg.Inch, 8*vg.Inch, fp); err != nil {
 		panic(err)
 	}
 }
