@@ -20,9 +20,9 @@ func DeleteFile(fp string) {
 // DeleteAllInDirectory deletes all files of a given extension in a specified directory
 // exension format: ".***"
 func DeleteAllInDirectory(dir, ext string) {
-for _, fp := range CollectFilesExt(dir,ext) {
-	DeleteFile(fp)
-}
+	for _, fp := range CollectFilesExt(dir, ext) {
+		DeleteFile(fp)
+	}
 }
 
 // CollectFilesExt returns a list of files of a given extension from a directory.
@@ -63,6 +63,25 @@ func DirExists(path string) bool {
 	return true
 }
 
+// MakeDir checks if directory exists, if not, creates it
+func MakeDir(path string) {
+	if !DirExists(path) {
+		if err := os.Mkdir(path, os.ModeDir); err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+
+// FileRename renames a file
+func FileRename(oldName, newName string, overwrite bool) {
+	if _, ok := FileExists(oldName); ok {
+		err := os.Rename(oldName, newName)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+
 // FileName returns the file name
 func FileName(fp string, withExtension bool) string {
 	fn := filepath.Base(fp)
@@ -74,7 +93,7 @@ func FileName(fp string, withExtension bool) string {
 
 // GetExtension returns the file path extension
 func GetExtension(fp string) string {
-	return  filepath.Ext(fp)
+	return filepath.Ext(fp)
 }
 
 // RemoveExtension returns the file path without its extension

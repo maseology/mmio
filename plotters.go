@@ -89,6 +89,7 @@ func ObsSim(fp string, o, s, b, x []float64) {
 		p.Legend.Add("sim", ps)
 	}
 	p.Legend.Top = true
+	// p.X.Tick.Marker = plot.TimeTicks{Format: "Jan"}
 
 	// Save the plot to a PNG file.
 	if err := p.Save(24*vg.Inch, 8*vg.Inch, fp); err != nil {
