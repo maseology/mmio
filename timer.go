@@ -24,6 +24,8 @@ func (t *Timer) Reset() {
 func (t *Timer) Print(msg string) {
 	if len(msg) == 0 {
 		fmt.Println(time.Now().Sub(t.t))
+	} else if msg == "\n" {
+		fmt.Printf("\n %v\n", time.Now().Sub(t.t))
 	} else {
 		fmt.Printf(" %s - %v\n", msg, time.Now().Sub(t.t))
 	}
