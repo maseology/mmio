@@ -26,6 +26,8 @@ func (t *Timer) Print(msg string) {
 		fmt.Println(time.Now().Sub(t.t))
 	} else if msg == "\n" {
 		fmt.Printf("\n %v\n", time.Now().Sub(t.t))
+	} else if msg[len(msg)-2:] == "\n" {
+		fmt.Printf(" %s - %v\n", msg[0:len(msg)-2], time.Now().Sub(t.t))
 	} else {
 		fmt.Printf(" %s - %v\n", msg, time.Now().Sub(t.t))
 	}
