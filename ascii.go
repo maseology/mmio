@@ -3,7 +3,25 @@ package mmio
 import (
 	"fmt"
 	"os"
+	"strconv"
 )
+
+// ReadInts is a simple routine that writes an integer slice to an ascii file
+func ReadInts(fp string) ([]int, error) {
+	sa, err := ReadTextLines(fp)
+	if err != nil {
+		return nil, err
+	}
+	da := make([]int, len(sa))
+	for i, ln := range sa {
+		d, err := strconv.Atoi(ln)
+		if err != nil {
+			return nil, err
+		}
+		da[i] = d
+	}
+	return da, nil
+}
 
 // WriteInts is a simple routine that writes an integer slice to an ascii file
 func WriteInts(fp string, d []int) error {
