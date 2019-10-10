@@ -43,7 +43,7 @@ func Histo(fp string, x []float64, nbins int) {
 }
 
 // ObsSim is used to create simple observed vs. simulated hydrographs
-func ObsSim(fp string, o, s, b, x []float64) {
+func ObsSim(fp string, o, s []float64) {
 	p, err := plot.New()
 	if err != nil {
 		panic(err)
@@ -65,29 +65,10 @@ func ObsSim(fp string, o, s, b, x []float64) {
 	}
 	po.Color = color.RGBA{B: 255, A: 255}
 
-	if b != nil {
-		pb, err := plotter.NewLine(sequentialLine(b))
-		if err != nil {
-			panic(err)
-		}
-		pb.Color = color.RGBA{R: 128, B: 64, A: 255}
-		px, err := plotter.NewLine(sequentialLine(x))
-		if err != nil {
-			panic(err)
-		}
-		pb.Color = color.RGBA{G: 128, B: 64, A: 255}
-		// Add the functions and their legend entries.
-		p.Add(ps, po, pb, px)
-		p.Legend.Add("obs", po)
-		p.Legend.Add("sim", ps)
-		p.Legend.Add("bf", pb)
-		p.Legend.Add("xs", px)
-	} else {
-		// Add the functions and their legend entries.
-		p.Add(ps, po)
-		p.Legend.Add("obs", po)
-		p.Legend.Add("sim", ps)
-	}
+	// Add the functions and their legend entries.
+	p.Add(ps, po)
+	p.Legend.Add("obs", po)
+	p.Legend.Add("sim", ps)
 	p.Legend.Top = true
 	// p.X.Tick.Marker = plot.TimeTicks{Format: "Jan"}
 
