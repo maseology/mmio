@@ -39,9 +39,12 @@ func EndTrace() {
 	trace.Stop()
 }
 
-// HeapProf writes a heap profiling file
-func HeapProf() {
-	f, err := os.Create("heap.out")
+// HeapDump writes a heap profiling file
+func HeapDump(fp string) {
+	if len(fp) == 0 {
+		fp = "heap.out"
+	}
+	f, err := os.Create(fp)
 	if err != nil {
 		log.Fatalf("failed to create heap output file: %v", err)
 	}
