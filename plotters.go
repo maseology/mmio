@@ -183,7 +183,38 @@ func Line(fp string, x []float64, ys map[string][]float64) {
 	p.Legend.Top = true
 
 	// Save the plot to a PNG file.
-	if err := p.Save(48*vg.Inch, 8*vg.Inch, fp); err != nil {
+	if err := p.Save(16*vg.Inch, 8*vg.Inch, fp); err != nil {
+		panic(err)
+	}
+}
+
+// LineCol creates a generic line plot with specified colour scheme
+func LineCol(fp string, x []float64, ys map[string][]float64, colours map[string]color.RGBA) {
+	p, err := plot.New()
+	if err != nil {
+		panic(err)
+	}
+
+	// p.Title.Text = fp
+	// p.X.Label.Text = ""
+	// p.Y.Label.Text = ""
+
+	for l, y := range ys {
+		ps, err := plotter.NewLine(points(x, y))
+		if err != nil {
+			panic(err)
+		}
+		if _, ok := colours[l]; !ok {
+			panic("colour not found")
+		}
+		ps.Color = colours[l]
+		p.Add(ps)
+		p.Legend.Add(l, ps)
+	}
+	p.Legend.Top = true
+
+	// Save the plot to a PNG file.
+	if err := p.Save(16*vg.Inch, 8*vg.Inch, fp); err != nil {
 		panic(err)
 	}
 }
