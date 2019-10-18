@@ -1,6 +1,7 @@
 package mmio
 
 import (
+	"fmt"
 	"image/color"
 	"math"
 	"sort"
@@ -37,7 +38,44 @@ func Histo(fp string, x []float64, nbins int) {
 	p.Add(h)
 
 	// Save the plot to a PNG file.
-	if err := p.Save(4*vg.Inch, 4*vg.Inch, "hist.png"); err != nil {
+	if err := p.Save(4*vg.Inch, 4*vg.Inch, fp); err != nil {
+		panic(err)
+	}
+}
+
+// HistoGT0 creates a generic histogram of all values >0.
+func HistoGT0(fp string, x []float64, nbins int) {
+	p, err := plot.New()
+	if err != nil {
+		panic(err)
+	}
+
+	n0 := 0
+	for _, d := range x {
+		if d <= 0. {
+			n0++
+		}
+	}
+
+	p.Title.Text = fmt.Sprintf("%s (n= %d; n0=%d)", fp, len(x), n0)
+
+	v, i := make(plotter.Values, len(x)-n0), 0
+	for _, d := range x {
+		if d > 0. {
+			v[i] = d
+			i++
+		}
+	}
+
+	h, err := plotter.NewHist(v, nbins)
+	if err != nil {
+		panic(err)
+	}
+
+	p.Add(h)
+
+	// Save the plot to a PNG file.
+	if err := p.Save(4*vg.Inch, 4*vg.Inch, fp); err != nil {
 		panic(err)
 	}
 }
@@ -165,7 +203,7 @@ func Scatter(fp string, x, y []float64) {
 }
 
 // Line creates a generic line plot
-func Line(fp string, x []float64, ys map[string][]float64) {
+func Line(fp string, x []float64, ys map[string][]float64, width float64) {
 	p, err := plot.New()
 	if err != nil {
 		panic(err)
@@ -183,7 +221,7 @@ func Line(fp string, x []float64, ys map[string][]float64) {
 	p.Legend.Top = true
 
 	// Save the plot to a PNG file.
-	if err := p.Save(16*vg.Inch, 8*vg.Inch, fp); err != nil {
+	if err := p.Save(vg.Length(width)*vg.Inch, 8*vg.Inch, fp); err != nil {
 		panic(err)
 	}
 }

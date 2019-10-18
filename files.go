@@ -44,8 +44,8 @@ func CollectFilesExt(dir, ext string) []string {
 }
 
 // FileExists checks if a file exists and returns its size
-func FileExists(fp string) (int64, bool) {
-	if fi, err := os.Stat(fp); err == nil {
+func FileExists(path string) (int64, bool) {
+	if fi, err := os.Stat(path); err == nil {
 		return fi.Size(), true
 	} else if os.IsNotExist(err) {
 		return 0, false
@@ -61,6 +61,16 @@ func DirExists(path string) bool {
 		return false
 	}
 	return true
+}
+
+// IsDir check if the entered path is a directory
+func IsDir(path string) bool {
+	fi, err := os.Stat(path)
+	if err != nil {
+		return false
+	}
+	m := fi.Mode()
+	return m.IsDir()
 }
 
 // MakeDir checks if directory exists, if not, creates it
