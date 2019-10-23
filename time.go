@@ -1,8 +1,6 @@
 package mmio
 
-import (
-	"time"
-)
+import "time"
 
 const unixToInternal int64 = 62135596800 // (1969*365 + 1969/4 - 1969/100 + 1969/400) * 24 * 60 * 60 // number of seconds between Year 1 and 1970 (62135596800 seconds)
 

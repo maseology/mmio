@@ -6,7 +6,6 @@ import (
 	"math"
 	"sort"
 
-	"github.com/maseology/mmaths"
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/plotter"
 	"gonum.org/v1/plot/plotutil"
@@ -321,9 +320,9 @@ func sequentialLine(v []float64) plotter.XYs {
 }
 
 func cumulativeDistributionLine(v []float64) plotter.XYs {
-	v = mmaths.OnlyPositive(v)
+	v = OnlyPositive(v)
 	sort.Float64s(v)
-	mmaths.RevF(v)
+	RevF(v)
 	pts, c, x := make(plotter.XYs, len(v)), 0, float64(len(v))/100.
 	for i := range pts {
 		if math.IsNaN(v[i]) {

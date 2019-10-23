@@ -76,7 +76,8 @@ func IsDir(path string) bool {
 // MakeDir checks if directory exists, if not, creates it
 func MakeDir(path string) {
 	if !DirExists(path) {
-		if err := os.Mkdir(path, os.ModeDir); err != nil {
+		// if err := os.Mkdir(path, os.ModeDir); err != nil {
+		if err := os.MkdirAll(path, os.ModePerm); err != nil {
 			log.Fatal(err)
 		}
 	}
@@ -109,4 +110,12 @@ func GetExtension(fp string) string {
 // RemoveExtension returns the file path without its extension
 func RemoveExtension(fp string) string {
 	return strings.TrimSuffix(fp, filepath.Ext(fp))
+}
+
+// GetFileDir returns the directory that contains the given filepath
+func GetFileDir(fp string) string {
+	if fp[len(fp)-1:] == "/" {
+		return filepath.Dir(fp[:len(fp)-1])
+	}
+	return filepath.Dir(fp)
 }
