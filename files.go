@@ -25,6 +25,11 @@ func DeleteAllInDirectory(dir, ext string) {
 	}
 }
 
+// DeleteAllSubdirectories deletes all subdirectories within a specified directory
+func DeleteAllSubdirectories(dir string) {
+
+}
+
 // CollectFilesExt returns a list of files of a given extension from a directory.
 // directories should end with "/" and extensions start with ".".
 // exension format: ".***"
