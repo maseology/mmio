@@ -27,7 +27,15 @@ func DeleteAllInDirectory(dir, ext string) {
 
 // DeleteAllSubdirectories deletes all subdirectories within a specified directory
 func DeleteAllSubdirectories(dir string) {
-
+	files, err := ioutil.ReadDir(dir)
+	if err != nil {
+		log.Fatal(err)
+	}
+	for _, f := range files {
+		if f.IsDir() {
+			os.RemoveAll(filepath.Join(dir, f.Name()))
+		}
+	}
 }
 
 // CollectFilesExt returns a list of files of a given extension from a directory.
