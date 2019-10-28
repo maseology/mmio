@@ -115,6 +115,26 @@ func FileName(fp string, withExtension bool) string {
 	return fn
 }
 
+// FileList returns a recursive list of files from a given directory
+func FileList(path string) ([]string, error) {
+	s := []string{}
+	err := filepath.Walk(path,
+		func(fp string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			if !info.IsDir() {
+				s = append(s, strings.Replace(fp, string(92), string(47), -1))
+				// s = append(s, strings.Replace(strings.Replace(fp, string(92), string(47), -1), path, "", -1))
+			}
+			return nil
+		})
+	if err != nil {
+		return nil, err
+	}
+	return s, nil
+}
+
 // GetExtension returns the file path extension
 func GetExtension(fp string) string {
 	return filepath.Ext(fp)
