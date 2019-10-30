@@ -135,6 +135,26 @@ func FileList(path string) ([]string, error) {
 	return s, nil
 }
 
+// DirList returns a list of subdirectories
+func DirList(root string) ([]string, error) {
+	s := []string{}
+	err := filepath.Walk(root,
+		func(fp string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+			if info.IsDir() && root != fp {
+				s = append(s, strings.Replace(fp, string(92), string(47), -1))
+				// s = append(s, strings.Replace(strings.Replace(fp, string(92), string(47), -1), path, "", -1))
+			}
+			return nil
+		})
+	if err != nil {
+		return nil, err
+	}
+	return s, nil
+}
+
 // GetExtension returns the file path extension
 func GetExtension(fp string) string {
 	return filepath.Ext(fp)
