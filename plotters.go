@@ -5,6 +5,7 @@ import (
 	"image/color"
 	"math"
 	"sort"
+	"time"
 
 	"gonum.org/v1/plot"
 	"gonum.org/v1/plot/plotter"
@@ -201,6 +202,39 @@ func Scatter(fp string, x, y []float64) {
 	}
 }
 
+// Scatter11 creates a generic scatter plot, with a 1:1 line
+func Scatter11(fp string, x, y []float64) {
+	p, err := plot.New()
+	if err != nil {
+		panic(err)
+	}
+
+	p.Title.Text = fp
+	p.X.Label.Text = "X"
+	p.Y.Label.Text = "Y"
+
+	if err := plotutil.AddScatters(p, points(x, y)); err != nil {
+		panic(err)
+	}
+	max, min := math.Max(p.X.Max, p.Y.Max), math.Min(p.X.Min, p.Y.Min)
+	p.X.Max = max
+	p.Y.Max = max
+	p.X.Min = min
+	p.Y.Min = min
+	abline, iabline := make(plotter.XYs, 2), make([]interface{}, 1)
+	abline[0].X, abline[0].Y = min, min
+	abline[1].X, abline[1].Y = max, max
+	iabline[0] = abline
+	if err := plotutil.AddLines(p, iabline...); err != nil {
+		panic(err)
+	}
+
+	// Save the plot to a PNG file.
+	if err := p.Save(4*vg.Inch, 4*vg.Inch, fp); err != nil {
+		panic(err)
+	}
+}
+
 // Line creates a generic line plot
 func Line(fp string, x []float64, ys map[string][]float64, width float64) {
 	p, err := plot.New()
@@ -294,6 +328,31 @@ func LinePoints2(fp string, x, y1, y2 []float64) {
 	}
 }
 
+// Temporal creates a generic line plot, but based on dates
+func Temporal(fp string, dts []time.Time, ys map[string][]float64, width float64) {
+	p, err := plot.New()
+	if err != nil {
+		panic(err)
+	}
+
+	lines := make([]interface{}, 0)
+	for l, y := range ys {
+		lines = append(lines, l)
+		lines = append(lines, datePoints(dts, y))
+	}
+	err = plotutil.AddLinePoints(p, lines...)
+	if err != nil {
+		panic(err)
+	}
+	p.Legend.Top = true
+	p.X.Tick.Marker = plot.TimeTicks{Format: "Jan06"} // "2006-01-02\n15:04"}
+
+	// Save the plot to a PNG file.
+	if err := p.Save(vg.Length(width)*vg.Inch, 8*vg.Inch, fp); err != nil {
+		panic(err)
+	}
+}
+
 func points(x, y []float64) plotter.XYs {
 	if len(x) != len(y) {
 		panic("mmplt.scatter error: unequal points array sizes")
@@ -301,6 +360,18 @@ func points(x, y []float64) plotter.XYs {
 	pts := make(plotter.XYs, len(x))
 	for i := range pts {
 		pts[i].X = x[i]
+		pts[i].Y = y[i]
+	}
+	return pts
+}
+
+func datePoints(d []time.Time, y []float64) plotter.XYs {
+	if len(d) != len(y) {
+		panic("mmplt.scatter error: unequal points array sizes")
+	}
+	pts := make(plotter.XYs, len(d))
+	for i := range pts {
+		pts[i].X = float64(d[i].Unix())
 		pts[i].Y = y[i]
 	}
 	return pts
