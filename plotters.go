@@ -213,7 +213,15 @@ func Scatter11(fp string, x, y []float64) {
 	p.X.Label.Text = "X"
 	p.Y.Label.Text = "Y"
 
-	if err := plotutil.AddScatters(p, points(x, y)); err != nil {
+	xn, yn := []float64{}, []float64{}
+	for i := range x {
+		if x[i] == 0. && y[i] == 0. {
+			continue
+		}
+		xn = append(xn, x[i])
+		yn = append(yn, y[i])
+	}
+	if err := plotutil.AddScatters(p, points(xn, yn)); err != nil {
 		panic(err)
 	}
 	max, min := math.Max(p.X.Max, p.Y.Max), math.Min(p.X.Min, p.Y.Min)
