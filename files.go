@@ -8,11 +8,15 @@ import (
 	"strings"
 )
 
-// DeleteFile deletes the specified file
+// DeleteFile deletes the specified file or directory
 func DeleteFile(fp string) {
-	if _, ok := FileExists(fp); ok {
+	if DirExists(fp) {
+		if err := os.RemoveAll(fp); err != nil {
+			log.Fatalf("files.go DeleteFile error 2: %v", err)
+		}
+	} else if _, ok := FileExists(fp); ok {
 		if err := os.Remove(fp); err != nil {
-			log.Fatal(err)
+			log.Fatalf("files.go DeleteFile error 1: %v", err)
 		}
 	}
 }
@@ -20,7 +24,7 @@ func DeleteFile(fp string) {
 // DeleteAllInDirectory deletes all files of a given extension in a specified directory
 // exension format: ".***"
 func DeleteAllInDirectory(dir, ext string) {
-	for _, fp := range CollectFilesExt(dir, ext) {
+	for _, fp := range FileListExt(dir, ext) {
 		DeleteFile(fp)
 	}
 }
@@ -38,10 +42,11 @@ func DeleteAllSubdirectories(dir string) {
 	}
 }
 
-// CollectFilesExt returns a list of files of a given extension from a directory.
+// FileListExt returns a list of files of a given extension from a directory.
 // directories should end with "/" and extensions start with ".".
 // exension format: ".***"
-func CollectFilesExt(dir, ext string) []string {
+func FileListExt(dir, ext string) []string {
+	dir = cleanDir(dir)
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
 		log.Fatal(err)
@@ -94,6 +99,14 @@ func MakeDir(path string) {
 			log.Fatal(err)
 		}
 	}
+}
+
+// CleanDir adds a "/" at end if it does not exist
+func cleanDir(dir string) string {
+	if dir[len(dir)-1:] != "/" {
+		dir += "/"
+	}
+	return dir
 }
 
 // FileRename renames a file
