@@ -298,6 +298,26 @@ func LineCol(fp string, x []float64, ys map[string][]float64, colours map[string
 	}
 }
 
+// LinePoints creates a generic plot of one x and many y's
+func LinePoints(fp string, x []float64, ys [][]float64) {
+	p, err := plot.New()
+	if err != nil {
+		panic(err)
+	}
+
+	for i := range ys {
+		err = plotutil.AddLinePoints(p, fmt.Sprintf("v%d", i+1), points(x, ys[i]))
+		if err != nil {
+			panic(err)
+		}
+	}
+
+	// Save the plot to a PNG file.
+	if err := p.Save(12*vg.Inch, 4*vg.Inch, fp); err != nil {
+		panic(err)
+	}
+}
+
 // LinePoints1 creates a generic plot of one xy set of data only
 func LinePoints1(fp string, x, y []float64) {
 	p, err := plot.New()
