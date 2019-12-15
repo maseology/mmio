@@ -255,7 +255,7 @@ func Line(fp string, x []float64, ys map[string][]float64, width float64) {
 		lines = append(lines, l)
 		lines = append(lines, points(x, y))
 	}
-	err = plotutil.AddLinePoints(p, lines...)
+	err = plotutil.AddLines(p, lines...)
 	if err != nil {
 		panic(err)
 	}
@@ -287,6 +287,7 @@ func LineCol(fp string, x []float64, ys map[string][]float64, colours map[string
 			panic("colour not found")
 		}
 		ps.Color = colours[l]
+		ps.Width = vg.Points(4) // line thickness
 		p.Add(ps)
 		p.Legend.Add(l, ps)
 	}

@@ -1,6 +1,8 @@
 package mmio
 
 import (
+	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -90,16 +92,6 @@ func cleanDir(dir string) string {
 	return dir
 }
 
-// FileRename renames a file
-func FileRename(oldName, newName string, overwrite bool) {
-	if _, ok := FileExists(oldName); ok {
-		err := os.Rename(oldName, newName)
-		if err != nil {
-			log.Fatal(err)
-		}
-	}
-}
-
 // FileName returns the file name
 func FileName(fp string, withExtension bool) string {
 	fn := filepath.Base(fp)
@@ -184,4 +176,39 @@ func GetFileDir(fp string) string {
 		return filepath.Dir(fp[:len(fp)-1])
 	}
 	return filepath.Dir(fp)
+}
+
+// FileRename renames a file
+func FileRename(oldName, newName string, overwrite bool) {
+	if _, ok := FileExists(oldName); ok {
+		err := os.Rename(oldName, newName)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+}
+
+// MoveFile moves a file (https://stackoverflow.com/questions/50740902/move-a-file-to-a-different-drive-with-go)
+func MoveFile(sourcePath, destPath string) error {
+	inputFile, err := os.Open(sourcePath)
+	if err != nil {
+		return fmt.Errorf("Couldn't open source file: %s", err)
+	}
+	outputFile, err := os.Create(destPath)
+	if err != nil {
+		inputFile.Close()
+		return fmt.Errorf("Couldn't open dest file: %s", err)
+	}
+	defer outputFile.Close()
+	_, err = io.Copy(outputFile, inputFile)
+	inputFile.Close()
+	if err != nil {
+		return fmt.Errorf("Writing to output file failed: %s", err)
+	}
+	// The copy was successful, so now delete the original file
+	err = os.Remove(sourcePath)
+	if err != nil {
+		return fmt.Errorf("Failed removing original file: %s", err)
+	}
+	return nil
 }
