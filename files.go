@@ -75,13 +75,14 @@ func IsDir(path string) bool {
 }
 
 // MakeDir checks if directory exists, if not, creates it
-func MakeDir(path string) {
+func MakeDir(path string) string {
 	if !DirExists(path) {
 		// if err := os.Mkdir(path, os.ModeDir); err != nil {
 		if err := os.MkdirAll(path, os.ModePerm); err != nil {
 			log.Fatal(err)
 		}
 	}
+	return path
 }
 
 // CleanDir adds a "/" at end if it does not exist
