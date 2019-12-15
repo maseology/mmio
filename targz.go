@@ -7,6 +7,7 @@ import (
 	"io"
 	"os"
 	"strings"
+	"time"
 )
 
 // CompressTarGZ converts a path to a *.tar.gz
@@ -14,13 +15,23 @@ func CompressTarGZ(path string) error {
 	if _, err := os.Stat(path); err != nil {
 		return fmt.Errorf("unable to tar files - %v", err.Error())
 	}
-
 	fps, err := FileList(path)
 	if err != nil {
 		return err
 	}
+	return compressTarGZ(fps, path)
+}
 
-	tgzf, err := os.Create(path + ".tar.gz")
+// CompressTarGZext converts files (with a given extension) in a path to a *.tar.gz
+func CompressTarGZext(path, ext string) error {
+	if _, err := os.Stat(path); err != nil {
+		return fmt.Errorf("unable to tar files - %v", err.Error())
+	}
+	return compressTarGZ(FileListExt(path, ext), path)
+}
+
+func compressTarGZ(fps []string, path string) error {
+	tgzf, err := os.Create(path + MMtime(time.Now()) + ".tar.gz")
 	if err != nil {
 		return err
 	}
