@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-// ReadCSV general CSV reader
+// ReadCSV general CSV reader (must be completely numeric)
 func ReadCSV(filepath string) ([][]float64, error) {
 	f, err := os.Open(filepath)
 	if err != nil {
@@ -19,7 +19,7 @@ func ReadCSV(filepath string) ([][]float64, error) {
 	}
 	defer f.Close()
 	var fout [][]float64
-	for rec := range processCSV(io.Reader(f)) {
+	for rec := range LoadCSV(io.Reader(f)) {
 		f1 := make([]float64, 0, len(rec))
 		for i, c := range rec {
 			f2, err := strconv.ParseFloat(c, 64)
@@ -34,7 +34,8 @@ func ReadCSV(filepath string) ([][]float64, error) {
 	return fout, err
 }
 
-func processCSV(rc io.Reader) (ch chan []string) {
+// LoadCSV  use: for rec := range LoadCSV(io.Reader(f)) {
+func LoadCSV(rc io.Reader) (ch chan []string) {
 	ch = make(chan []string)
 	go func() {
 		r := csv.NewReader(rc)
