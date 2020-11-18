@@ -195,6 +195,29 @@ func ReadBinaryFloats(filepath string, d int) ([][]float64, int, error) {
 	return a, n, nil
 }
 
+// ReadBinaryFloat32s reads an entire file and returns a slice of d dimensions
+func ReadBinaryFloat32s(filepath string, d int) ([][]float32, int, error) {
+	var err error
+	b, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		fmt.Printf("ReadBinaryFloats failed: %v\n", err)
+		return nil, 0, fmt.Errorf("ioutil.ReadFile failed: %v", err)
+	}
+	buf := bytes.NewReader(b)
+	n := len(b) / 4 / d
+	a := make([][]float32, d)
+	for i := 0; i < d; i++ {
+		v := make([]float32, n)
+		err := binary.Read(buf, binary.LittleEndian, v)
+		if err != nil {
+			fmt.Printf("ReadBinaryFloats failed: %v\n", err)
+			return nil, 0, fmt.Errorf("binary.Read failed: %v", err)
+		}
+		a[i] = v
+	}
+	return a, n, nil
+}
+
 // ReadBinaryInts reads an entire file and returns a slice of d dimensions
 func ReadBinaryInts(filepath string, d int) ([][]int32, int, error) {
 	var err error
