@@ -49,5 +49,5 @@ func MMdate(d time.Time) string {
 
 // MMtime returns a string date formatted yymmdd_hhmmss
 func MMtime(d time.Time) string {
-	return d.Format("060102_150405")
+	return d.Format("060102-150405")
 }

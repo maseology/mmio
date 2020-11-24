@@ -31,7 +31,7 @@ func CompressTarGZext(path, ext string) error {
 }
 
 func compressTarGZ(fps []string, path string) error {
-	tgzf, err := os.Create(path + MMtime(time.Now()) + ".tar.gz")
+	tgzf, err := os.Create(path + "-" + MMtime(time.Now()) + ".tar.gz")
 	if err != nil {
 		return err
 	}
