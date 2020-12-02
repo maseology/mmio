@@ -3,6 +3,7 @@ package mmio
 import (
 	"fmt"
 	"image/color"
+	"log"
 	"math"
 	"sort"
 	"time"
@@ -22,7 +23,7 @@ func Bar1(fp string) {
 
 	p, err := plot.New()
 	if err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Bar1 error: %v", err)
 	}
 	p.Title.Text = "Bar chart"
 	p.Y.Label.Text = "Heights"
@@ -31,7 +32,7 @@ func Bar1(fp string) {
 
 	barsA, err := plotter.NewBarChart(groupA, w)
 	if err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Bar1 error: %v", err)
 	}
 	barsA.LineStyle.Width = vg.Length(0)
 	barsA.Color = plotutil.Color(0)
@@ -39,14 +40,14 @@ func Bar1(fp string) {
 
 	barsB, err := plotter.NewBarChart(groupB, w)
 	if err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Bar1 error: %v", err)
 	}
 	barsB.LineStyle.Width = vg.Length(0)
 	barsB.Color = plotutil.Color(1)
 
 	barsC, err := plotter.NewBarChart(groupC, w)
 	if err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Bar1 error: %v", err)
 	}
 	barsC.LineStyle.Width = vg.Length(0)
 	barsC.Color = plotutil.Color(2)
@@ -60,7 +61,7 @@ func Bar1(fp string) {
 	p.NominalX("One", "Two", "Three", "Four", "Five")
 
 	if err := p.Save(5*vg.Inch, 3*vg.Inch, fp); err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Bar1 error: %v", err)
 	}
 }
 
@@ -68,7 +69,7 @@ func Bar1(fp string) {
 func Bar(fp string, y []float64, xlab []string) {
 	p, err := plot.New()
 	if err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Bar error: %v", err)
 	}
 
 	p.Title.Text = fp
@@ -83,7 +84,7 @@ func Bar(fp string, y []float64, xlab []string) {
 
 	bars, err := plotter.NewBarChart(v, w)
 	if err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Bar error: %v", err)
 	}
 	bars.LineStyle.Width = vg.Length(0)
 	bars.Color = plotutil.Color(0)
@@ -95,7 +96,7 @@ func Bar(fp string, y []float64, xlab []string) {
 	p.X.Tick.Label.XAlign = draw.XRight
 
 	if err := p.Save(10*vg.Inch, 6*vg.Inch, fp); err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Bar error: %v", err)
 	}
 }
 
@@ -103,7 +104,7 @@ func Bar(fp string, y []float64, xlab []string) {
 func Histo(fp string, x []float64, nbins int) {
 	p, err := plot.New()
 	if err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Histo error: %v", err)
 	}
 
 	p.Title.Text = fp
@@ -115,7 +116,7 @@ func Histo(fp string, x []float64, nbins int) {
 
 	h, err := plotter.NewHist(v, nbins)
 	if err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Histo error: %v", err)
 	}
 
 	// Normalize the area under the histogram to
@@ -125,7 +126,7 @@ func Histo(fp string, x []float64, nbins int) {
 
 	// Save the plot to a PNG file.
 	if err := p.Save(4*vg.Inch, 4*vg.Inch, fp); err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Histo error: %v", err)
 	}
 }
 
@@ -133,7 +134,7 @@ func Histo(fp string, x []float64, nbins int) {
 func HistoGT0(fp string, x []float64, nbins int) {
 	p, err := plot.New()
 	if err != nil {
-		panic(err)
+		log.Fatalf(" plotters.HistoGT0 error: %v", err)
 	}
 
 	n0 := 0
@@ -155,14 +156,14 @@ func HistoGT0(fp string, x []float64, nbins int) {
 
 	h, err := plotter.NewHist(v, nbins)
 	if err != nil {
-		panic(err)
+		log.Fatalf(" plotters.HistoGT0 error: %v", err)
 	}
 
 	p.Add(h)
 
 	// Save the plot to a PNG file.
 	if err := p.Save(4*vg.Inch, 4*vg.Inch, fp); err != nil {
-		panic(err)
+		log.Fatalf(" plotters.HistoGT0 error: %v", err)
 	}
 }
 
@@ -170,7 +171,7 @@ func HistoGT0(fp string, x []float64, nbins int) {
 func ObsSim(fp string, o, s []float64) {
 	p, err := plot.New()
 	if err != nil {
-		panic(err)
+		log.Fatalf(" plotters.ObsSim error: %v", err)
 	}
 
 	// p.Title.Text = fp
@@ -179,13 +180,13 @@ func ObsSim(fp string, o, s []float64) {
 
 	ps, err := plotter.NewLine(sequentialLine(s))
 	if err != nil {
-		panic(err)
+		log.Fatalf(" plotters.ObsSim error: %v", err)
 	}
 	ps.Color = color.RGBA{R: 255, A: 255}
 
 	po, err := plotter.NewLine(sequentialLine(o))
 	if err != nil {
-		panic(err)
+		log.Fatalf(" plotters.ObsSim error: %v", err)
 	}
 	po.Color = color.RGBA{B: 255, A: 255}
 
@@ -198,7 +199,7 @@ func ObsSim(fp string, o, s []float64) {
 
 	// Save the plot to a PNG file.
 	if err := p.Save(24*vg.Inch, 8*vg.Inch, fp); err != nil {
-		panic(err)
+		log.Fatalf(" plotters.ObsSim error: %v", err)
 	}
 }
 
@@ -220,13 +221,13 @@ func ObsSimFDC(fp string, o, s []float64) {
 
 	ps, err := plotter.NewLine(cumulativeDistributionLine(scopy))
 	if err != nil {
-		panic(err)
+		log.Fatalf(" plotters.ObsSimFDC error: %v", err)
 	}
 	ps.Color = color.RGBA{R: 255, A: 255}
 
 	po, err := plotter.NewLine(cumulativeDistributionLine(ocopy))
 	if err != nil {
-		panic(err)
+		log.Fatalf(" plotters.ObsSimFDC error: %v", err)
 	}
 	po.Color = color.RGBA{B: 255, A: 255}
 
@@ -239,7 +240,7 @@ func ObsSimFDC(fp string, o, s []float64) {
 
 	// Save the plot to a PNG file.
 	if err := p.Save(12*vg.Inch, 4*vg.Inch, fp); err != nil {
-		panic(err)
+		log.Fatalf(" plotters.ObsSimFDC error: %v", err)
 	}
 }
 
@@ -247,7 +248,7 @@ func ObsSimFDC(fp string, o, s []float64) {
 func Wbal(fp string, f, a, q, g, s []float64) {
 	p, err := plot.New()
 	if err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Wbal error: %v", err)
 	}
 
 	err = plotutil.AddLines(p,
@@ -257,12 +258,12 @@ func Wbal(fp string, f, a, q, g, s []float64) {
 		"rch", sequentialLine(g),
 		"sto", sequentialLine(s))
 	if err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Wbal error: %v", err)
 	}
 
 	// Save the plot to a PNG file.
 	if err := p.Save(12*vg.Inch, 4*vg.Inch, fp); err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Wbal error: %v", err)
 	}
 }
 
@@ -270,7 +271,7 @@ func Wbal(fp string, f, a, q, g, s []float64) {
 func Scatter(fp string, x, y []float64) {
 	p, err := plot.New()
 	if err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Scatter error: %v", err)
 	}
 
 	p.Title.Text = fp
@@ -279,12 +280,12 @@ func Scatter(fp string, x, y []float64) {
 
 	err = plotutil.AddScatters(p, points(x, y))
 	if err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Scatter error: %v", err)
 	}
 
 	// Save the plot to a PNG file.
 	if err := p.Save(4*vg.Inch, 4*vg.Inch, fp); err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Scatter error: %v", err)
 	}
 }
 
@@ -292,7 +293,7 @@ func Scatter(fp string, x, y []float64) {
 func Scatter11(fp string, x, y []float64) {
 	p, err := plot.New()
 	if err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Scatter1 error: %v", err)
 	}
 
 	p.Title.Text = fp
@@ -308,7 +309,7 @@ func Scatter11(fp string, x, y []float64) {
 		yn = append(yn, y[i])
 	}
 	if err := plotutil.AddScatters(p, points(xn, yn)); err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Scatter1 error: %v", err)
 	}
 	max, min := math.Max(p.X.Max, p.Y.Max), math.Min(p.X.Min, p.Y.Min)
 	p.X.Max = max
@@ -320,12 +321,12 @@ func Scatter11(fp string, x, y []float64) {
 	abline[1].X, abline[1].Y = max, max
 	iabline[0] = abline
 	if err := plotutil.AddLines(p, iabline...); err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Scatter1 error: %v", err)
 	}
 
 	// Save the plot to a PNG file.
 	if err := p.Save(4*vg.Inch, 4*vg.Inch, fp); err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Scatter1 error: %v", err)
 	}
 }
 
@@ -333,7 +334,7 @@ func Scatter11(fp string, x, y []float64) {
 func Line(fp string, x []float64, ys map[string][]float64, width float64) {
 	p, err := plot.New()
 	if err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Line error: %v", err)
 	}
 
 	lines := make([]interface{}, 0)
@@ -343,13 +344,13 @@ func Line(fp string, x []float64, ys map[string][]float64, width float64) {
 	}
 	err = plotutil.AddLines(p, lines...)
 	if err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Line error: %v", err)
 	}
 	p.Legend.Top = true
 
 	// Save the plot to a PNG file.
 	if err := p.Save(vg.Length(width)*vg.Inch, 8*vg.Inch, fp); err != nil {
-		panic(err)
+		log.Fatalf(" plotters.Line error: %v", err)
 	}
 }
 
