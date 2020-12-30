@@ -118,29 +118,30 @@ func compressTarGZ(fps []string, path string) error {
 
 // ExtractTarGZ extracts a *.tar.gz file to a directory
 // from https://gist.github.com/indraniel/1a91458984179ab4cf80
-func ExtractTarGZ(fp string) error {
+func ExtractTarGZ(fp string) (string, error) {
 	f, err := os.Open(fp)
 	if err != nil {
-		return err
+		return "", err
 	}
 	defer f.Close()
 
 	gzf, err := gzip.NewReader(f)
 	if err != nil {
-		return err
+		return "", err
 	}
+	defer gzf.Close()
 
 	odir := strings.Replace(fp, ".tar.gz", string(47), -1)
 	MakeDir(odir)
 
 	tarReader := tar.NewReader(gzf)
-	for true {
+	for {
 		header, err := tarReader.Next()
 		if err == io.EOF {
 			break
 		}
 		if err != nil {
-			return err
+			return "", err
 		}
 
 		name := odir + header.Name
@@ -154,9 +155,10 @@ func ExtractTarGZ(fp string) error {
 			}
 			f, err := os.Create(name)
 			if err != nil {
-				return err
+				return "", err
 			}
 			io.Copy(f, tarReader)
+			f.Close()
 			// data := make([]byte, header.Size)
 			// _, err := tarReader.Read(data)
 			// if err != nil {
@@ -164,8 +166,8 @@ func ExtractTarGZ(fp string) error {
 			// }
 			// ioutil.WriteFile(name, data, 0755)
 		default:
-			return fmt.Errorf("unknown file type: %c in file %s", header.Typeflag, name)
+			return "", fmt.Errorf("unknown file type: %c in file %s", header.Typeflag, name)
 		}
 	}
-	return nil
+	return odir, nil
 }

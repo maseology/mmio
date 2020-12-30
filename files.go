@@ -31,6 +31,14 @@ func DeleteAllInDirectory(dir, ext string) {
 	}
 }
 
+// DeleteDir deletes a directory
+func DeleteDir(dir string) {
+	err := os.RemoveAll(dir)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
 // DeleteAllSubdirectories deletes all subdirectories within a specified directory
 func DeleteAllSubdirectories(dir string) {
 	files, err := ioutil.ReadDir(dir)

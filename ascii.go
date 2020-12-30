@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-// ReadInts is a simple routine that writes an integer slice to an ascii file
+// ReadInts is a simple routine that reads an integer slice to an ascii file
 func ReadInts(fp string) ([]int, error) {
 	sa, err := ReadTextLines(fp)
 	if err != nil {
@@ -39,6 +39,23 @@ func WriteInts(fp string, d []int) error {
 		return err
 	}
 	return nil
+}
+
+// ReadFloats is a simple routine that reads an float slice to an ascii file
+func ReadFloats(fp string) ([]float64, error) {
+	sa, err := ReadTextLines(fp)
+	if err != nil {
+		return nil, err
+	}
+	da := make([]float64, len(sa))
+	for i, ln := range sa {
+		d, err := strconv.ParseFloat(ln, 64)
+		if err != nil {
+			return nil, err
+		}
+		da[i] = d
+	}
+	return da, nil
 }
 
 // WriteFloats is a simple routine that writes an float slice to an ascii file
