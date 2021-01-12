@@ -84,14 +84,37 @@ func (w *CSVwriter) Close() {
 
 // WriteLine general CSV line writer method for CSVwriter
 func (w *CSVwriter) WriteLine(data ...interface{}) error {
-	var err error
-	a := make([]string, len(data))
-	for i, v := range data {
-		a[i] = fmt.Sprint(v)
+
+	n := len(data) // get line length
+	for _, v := range data {
+		switch v.(type) {
+		case []float64:
+			for range v.([]float64) {
+				n++
+			}
+			n--
+		case []string, []int, []float32:
+			return fmt.Errorf("CSVwriter.WriteLine TODO: lists of type %T", v)
+		default:
+		}
 	}
-	err = w.writer.Write(a)
-	if err != nil {
-		log.Fatal("Cannot write to file", err)
+
+	a, ii := make([]string, n), 0
+	for _, v := range data {
+		switch v.(type) {
+		case []float64:
+			for _, vv := range v.([]float64) {
+				a[ii] = fmt.Sprint(vv)
+				ii++
+			}
+		default:
+			a[ii] = fmt.Sprint(v)
+			ii++
+		}
+	}
+
+	if err := w.writer.Write(a); err != nil {
+		return fmt.Errorf("CSVwriter.WriteLine error: %v", err)
 	}
 	return nil
 }
