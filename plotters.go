@@ -21,10 +21,7 @@ func Bar1(fp string) {
 	groupB := plotter.Values{25, 32, 34, 20, 25}
 	groupC := plotter.Values{12, 28, 15, 21, 8}
 
-	p, err := plot.New()
-	if err != nil {
-		log.Fatalf(" plotters.Bar1 error: %v", err)
-	}
+	p := plot.New()
 	p.Title.Text = "Bar chart"
 	p.Y.Label.Text = "Heights"
 
@@ -67,11 +64,7 @@ func Bar1(fp string) {
 
 // Bar create a generic bar chart
 func Bar(fp string, y []float64, xlab []string) {
-	p, err := plot.New()
-	if err != nil {
-		log.Fatalf(" plotters.Bar error: %v", err)
-	}
-
+	p := plot.New()
 	p.Title.Text = fp
 
 	v := make(plotter.Values, len(y))
@@ -102,10 +95,7 @@ func Bar(fp string, y []float64, xlab []string) {
 
 // Histo creates a generic histogram
 func Histo(fp string, x []float64, nbins int) {
-	p, err := plot.New()
-	if err != nil {
-		log.Fatalf(" plotters.Histo error: %v", err)
-	}
+	p := plot.New()
 
 	p.Title.Text = fp
 
@@ -132,10 +122,7 @@ func Histo(fp string, x []float64, nbins int) {
 
 // HistoGT0 creates a generic histogram of all values >0.
 func HistoGT0(fp string, x []float64, nbins int) {
-	p, err := plot.New()
-	if err != nil {
-		log.Fatalf(" plotters.HistoGT0 error: %v", err)
-	}
+	p := plot.New()
 
 	n0 := 0
 	for _, d := range x {
@@ -169,10 +156,7 @@ func HistoGT0(fp string, x []float64, nbins int) {
 
 // ObsSim is used to create simple observed vs. simulated hydrographs
 func ObsSim(fp string, o, s []float64) {
-	p, err := plot.New()
-	if err != nil {
-		log.Fatalf(" plotters.ObsSim error: %v", err)
-	}
+	p := plot.New()
 
 	// p.Title.Text = fp
 	p.X.Label.Text = ""
@@ -205,10 +189,7 @@ func ObsSim(fp string, o, s []float64) {
 
 // ObsSimFDC is used to create simple observed vs. simulated flow-duration curves
 func ObsSimFDC(fp string, o, s []float64) {
-	p, err := plot.New()
-	if err != nil {
-		panic(err)
-	}
+	p := plot.New()
 
 	// create copies
 	ocopy, scopy := make([]float64, len(o)), make([]float64, len(s))
@@ -246,12 +227,9 @@ func ObsSimFDC(fp string, o, s []float64) {
 
 // Wbal used to review waterbalance
 func Wbal(fp string, f, a, q, g, s []float64) {
-	p, err := plot.New()
-	if err != nil {
-		log.Fatalf(" plotters.Wbal error: %v", err)
-	}
+	p := plot.New()
 
-	err = plotutil.AddLines(p,
+	err := plotutil.AddLines(p,
 		"pre", sequentialLine(f),
 		"aet", sequentialLine(a),
 		"ro", sequentialLine(q),
@@ -269,16 +247,13 @@ func Wbal(fp string, f, a, q, g, s []float64) {
 
 // Scatter creates a generic scatter plot
 func Scatter(fp string, x, y []float64) {
-	p, err := plot.New()
-	if err != nil {
-		log.Fatalf(" plotters.Scatter error: %v", err)
-	}
+	p := plot.New()
 
 	p.Title.Text = fp
 	p.X.Label.Text = "X"
 	p.Y.Label.Text = "Y"
 
-	err = plotutil.AddScatters(p, points(x, y))
+	err := plotutil.AddScatters(p, points(x, y))
 	if err != nil {
 		log.Fatalf(" plotters.Scatter error: %v", err)
 	}
@@ -291,10 +266,7 @@ func Scatter(fp string, x, y []float64) {
 
 // Scatter11 creates a generic scatter plot, with a 1:1 line
 func Scatter11(fp string, x, y []float64) {
-	p, err := plot.New()
-	if err != nil {
-		log.Fatalf(" plotters.Scatter1 error: %v", err)
-	}
+	p := plot.New()
 
 	p.Title.Text = fp
 	p.X.Label.Text = "X"
@@ -332,17 +304,14 @@ func Scatter11(fp string, x, y []float64) {
 
 // Line creates a generic line plot
 func Line(fp string, x []float64, ys map[string][]float64, width float64) {
-	p, err := plot.New()
-	if err != nil {
-		log.Fatalf(" plotters.Line error: %v", err)
-	}
+	p := plot.New()
 
 	lines := make([]interface{}, 0)
 	for l, y := range ys {
 		lines = append(lines, l)
 		lines = append(lines, points(x, y))
 	}
-	err = plotutil.AddLines(p, lines...)
+	err := plotutil.AddLines(p, lines...)
 	if err != nil {
 		log.Fatalf(" plotters.Line error: %v", err)
 	}
@@ -356,10 +325,7 @@ func Line(fp string, x []float64, ys map[string][]float64, width float64) {
 
 // LineCol creates a generic line plot with specified colour scheme
 func LineCol(fp string, x []float64, ys map[string][]float64, colours map[string]color.RGBA) {
-	p, err := plot.New()
-	if err != nil {
-		panic(err)
-	}
+	p := plot.New()
 
 	// p.Title.Text = fp
 	// p.X.Label.Text = ""
@@ -388,13 +354,10 @@ func LineCol(fp string, x []float64, ys map[string][]float64, colours map[string
 
 // LinePoints creates a generic plot of one x and many y's
 func LinePoints(fp string, x []float64, ys [][]float64) {
-	p, err := plot.New()
-	if err != nil {
-		panic(err)
-	}
+	p := plot.New()
 
 	for i := range ys {
-		err = plotutil.AddLinePoints(p, fmt.Sprintf("v%d", i+1), points(x, ys[i]))
+		err := plotutil.AddLinePoints(p, fmt.Sprintf("v%d", i+1), points(x, ys[i]))
 		if err != nil {
 			panic(err)
 		}
@@ -408,12 +371,9 @@ func LinePoints(fp string, x []float64, ys [][]float64) {
 
 // LinePoints1 creates a generic plot of one xy set of data only
 func LinePoints1(fp string, x, y []float64) {
-	p, err := plot.New()
-	if err != nil {
-		panic(err)
-	}
+	p := plot.New()
 
-	err = plotutil.AddLinePoints(p, "v1", points(x, y))
+	err := plotutil.AddLinePoints(p, "v1", points(x, y))
 	if err != nil {
 		panic(err)
 	}
@@ -426,12 +386,9 @@ func LinePoints1(fp string, x, y []float64) {
 
 // LinePoints2 creates a generic plot of lines from 2 sets of xy data
 func LinePoints2(fp string, x, y1, y2 []float64) {
-	p, err := plot.New()
-	if err != nil {
-		panic(err)
-	}
+	p := plot.New()
 
-	err = plotutil.AddLinePoints(p,
+	err := plotutil.AddLinePoints(p,
 		"v1", points(x, y1),
 		"v2", points(x, y2))
 	if err != nil {
@@ -446,17 +403,14 @@ func LinePoints2(fp string, x, y1, y2 []float64) {
 
 // Temporal creates a generic line plot, but based on dates
 func Temporal(fp string, dts []time.Time, ys map[string][]float64, width float64) {
-	p, err := plot.New()
-	if err != nil {
-		panic(err)
-	}
+	p := plot.New()
 
 	lines := make([]interface{}, 0)
 	for l, y := range ys {
 		lines = append(lines, l)
 		lines = append(lines, datePoints(dts, y))
 	}
-	err = plotutil.AddLinePoints(p, lines...)
+	err := plotutil.AddLinePoints(p, lines...)
 	if err != nil {
 		panic(err)
 	}
