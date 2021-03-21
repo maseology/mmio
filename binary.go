@@ -27,7 +27,7 @@ import (
 func OpenBinary(filepath string) *bytes.Reader {
 	b, err := ioutil.ReadFile(filepath)
 	if err != nil {
-		log.Fatalf("Fatal error: OpenBinary failed: %v\n", err)
+		log.Fatalf("Fatal error: binary.OpenBinary failed: %v\n", err)
 	}
 	return bytes.NewReader(b)
 }
