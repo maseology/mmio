@@ -280,6 +280,30 @@ func ReadBinaryIMAP(filepath string) (map[int]int, error) {
 	return m, nil
 }
 
+// ReadBinaryRMAP reads a map[int]float64 for an entire file
+func ReadBinaryRMAP(filepath string) (map[int]float64, error) {
+	var err error
+	b, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		return nil, fmt.Errorf("ReadBinaryRMAP: ioutil.ReadFile failed: %v", err)
+	}
+	buf := bytes.NewReader(b)
+	type Dat struct {
+		I int32
+		F float64
+	}
+	n := len(b) / 12
+	v := make([]Dat, n)
+	if err := binary.Read(buf, binary.LittleEndian, v); err != nil {
+		return nil, fmt.Errorf("ReadBinaryRMAP: %v", err)
+	}
+	m := make(map[int]float64, len(v))
+	for _, d := range v {
+		m[int(d.I)] = d.F
+	}
+	return m, nil
+}
+
 // WriteBinary general binary writer
 func WriteBinary(filepath string, data ...interface{}) error {
 	buf := new(bytes.Buffer)
