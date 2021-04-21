@@ -20,6 +20,10 @@ func (t *Timer) Reset() {
 	t.t = time.Now()
 }
 
+func (t *Timer) Now() string {
+	return fmt.Sprint(time.Since(t.t))
+}
+
 // Print reports current time
 func (t *Timer) Print(msg string) {
 	if len(msg) == 0 {
