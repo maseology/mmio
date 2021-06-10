@@ -75,3 +75,18 @@ func WriteFloats(fp string, d []float64) error {
 	}
 	return nil
 }
+
+func WriteString(fp, content string) error {
+	f, err := os.OpenFile(fp, os.O_CREATE|os.O_WRONLY, 0644)
+	// f, err := os.OpenFile(fp, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644) // append
+	if err != nil {
+		return err
+	}
+	if _, err := f.Write([]byte(content)); err != nil {
+		return err
+	}
+	if err := f.Close(); err != nil {
+		return err
+	}
+	return nil
+}
