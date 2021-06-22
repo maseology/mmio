@@ -221,3 +221,12 @@ func MoveFile(sourcePath, destPath string) error {
 	}
 	return nil
 }
+
+func CreateEmpty(filepath string) error {
+	emptyFile, err := os.Create(filepath)
+	if err != nil {
+		return err
+	}
+	emptyFile.Close()
+	return nil
+}
