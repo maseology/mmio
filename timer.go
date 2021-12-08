@@ -15,6 +15,10 @@ func NewTimer() Timer {
 	return t
 }
 
+func (t *Timer) T0() time.Time {
+	return t.t
+}
+
 // Reset start a timer
 func (t *Timer) Reset() {
 	t.t = time.Now()
@@ -40,5 +44,10 @@ func (t *Timer) Print(msg string) {
 // Lap reports lap time (resets timer)
 func (t *Timer) Lap(msg string) {
 	t.Print(msg)
+	t.Reset()
+}
+
+func (t *Timer) PrintAndReset(msg string) {
+	fmt.Printf("%s\n%s ", time.Since(t.t), msg)
 	t.Reset()
 }

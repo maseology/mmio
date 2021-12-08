@@ -34,6 +34,15 @@ func ReadCSV(filepath string) ([][]float64, error) {
 	return fout, err
 }
 
+func ncolsCSV(rc io.Reader) int {
+	r := csv.NewReader(rc)
+	head, err := r.Read()
+	if err != nil { //read header
+		log.Fatal(err)
+	}
+	return len(head)
+}
+
 // LoadCSV  use: for rec := range LoadCSV(io.Reader(f)) {
 func LoadCSV(rc io.Reader) (ch chan []string) {
 	ch = make(chan []string)
