@@ -309,11 +309,11 @@ func WriteBinary(filepath string, data ...interface{}) error {
 	buf := new(bytes.Buffer)
 	for _, v := range data {
 		if err := binary.Write(buf, binary.LittleEndian, v); err != nil {
-			return fmt.Errorf("WriteBinary failed: %v", err)
+			return fmt.Errorf("mmio.WriteBinary failed: %v", err)
 		}
 	}
 	if err := ioutil.WriteFile(filepath, buf.Bytes(), 0644); err != nil { // see: https://en.wikipedia.org/wiki/File_system_permissions
-		return fmt.Errorf("ioutil.WriteFile failed: %v", err)
+		return fmt.Errorf("mmio.WriteBinary failed: %v", err)
 	}
 	return nil
 }

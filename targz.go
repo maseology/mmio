@@ -11,29 +11,30 @@ import (
 )
 
 // CompressTarGZ converts a path to a *.tar.gz
-func CompressTarGZ(path string) error {
+func CompressTarGZ(path string) (string, error) {
 	if _, err := os.Stat(path); err != nil {
-		return fmt.Errorf("unable to tar files - %v", err.Error())
+		return "", fmt.Errorf("unable to tar files - %v", err.Error())
 	}
 	fps, err := FileList(path)
 	if err != nil {
-		return err
+		return "", err
 	}
 	return compressTarGZ(fps, path)
 }
 
 // CompressTarGZext converts files (with a given extension) in a path to a *.tar.gz
-func CompressTarGZext(path, ext string) error {
+func CompressTarGZext(path, ext string) (string, error) {
 	if _, err := os.Stat(path); err != nil {
-		return fmt.Errorf("unable to tar files - %v", err.Error())
+		return "", fmt.Errorf("unable to tar files - %v", err.Error())
 	}
 	return compressTarGZ(FileListExt(path, ext), path)
 }
 
-func compressTarGZ(fps []string, path string) error {
-	tgzf, err := os.Create(path + "-" + MMtime(time.Now()) + ".tar.gz")
+func compressTarGZ(fps []string, path string) (string, error) {
+	fpout := path + "-" + MMtime(time.Now()) + ".tar.gz"
+	tgzf, err := os.Create(fpout)
 	if err != nil {
-		return err
+		return "", err
 	}
 	defer tgzf.Close()
 
@@ -50,12 +51,12 @@ func compressTarGZ(fps []string, path string) error {
 	for _, fp := range fps { // from https://socketloop.com/tutorials/golang-archive-directory-with-tar-and-gzip
 		f, err := os.Open(fp)
 		if err != nil {
-			return err
+			return "", err
 		}
 		defer f.Close()
 		fi, err := f.Stat()
 		if err != nil {
-			return err
+			return "", err
 		}
 
 		// prepare the tar header
@@ -66,13 +67,13 @@ func compressTarGZ(fps []string, path string) error {
 		header.ModTime = fi.ModTime()
 
 		if err = tw.WriteHeader(header); err != nil {
-			return err
+			return "", err
 		}
 		if _, err := io.Copy(tw, f); err != nil {
-			return err
+			return "", err
 		}
 	}
-	return nil
+	return fpout, nil
 
 	// // walk path // from https://medium.com/@skdomino/taring-untaring-files-in-go-6b07cf56bc07
 	// return filepath.Walk(path, func(file string, fi os.FileInfo, err error) error {

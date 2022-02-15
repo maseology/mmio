@@ -76,6 +76,24 @@ func WriteFloats(fp string, d []float64) error {
 	return nil
 }
 
+// WriteStrings is a simple routine that writes a slice of strings to an ascii file
+func WriteStrings(fp string, s []string) error {
+	f, err := os.OpenFile(fp, os.O_CREATE|os.O_WRONLY, 0644)
+	// f, err := os.OpenFile(fp, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644) // append
+	if err != nil {
+		return err
+	}
+	for _, v := range s {
+		if _, err := f.Write([]byte(v + "\n")); err != nil {
+			return err
+		}
+	}
+	if err := f.Close(); err != nil {
+		return err
+	}
+	return nil
+}
+
 func WriteString(fp, content string) error {
 	f, err := os.OpenFile(fp, os.O_CREATE|os.O_WRONLY, 0644)
 	// f, err := os.OpenFile(fp, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644) // append
