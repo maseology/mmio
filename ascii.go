@@ -84,6 +84,9 @@ func WriteStrings(fp string, s []string) error {
 		return err
 	}
 	for _, v := range s {
+		if len(v) == 0 {
+			continue
+		}
 		if _, err := f.Write([]byte(v + "\n")); err != nil {
 			return err
 		}
