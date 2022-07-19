@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 )
 
 // TXTwriter general text writer
@@ -77,7 +78,7 @@ func ReadTextLines(fp string) ([]string, error) {
 			return nil, fmt.Errorf("ReadTextLines: %v", err)
 		}
 		// a = append(a, string(line))
-		a = append(a, line[:len(line)-1])
+		a = append(a, strings.TrimSpace(line))
 	}
 
 	// scanner, a := bufio.NewScanner(file), make([]string, 0)
