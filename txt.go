@@ -69,13 +69,15 @@ func ReadTextLines(fp string) ([]string, error) {
 
 	reader, a := bufio.NewReader(file), make([]string, 0)
 	for {
-		line, _, err := reader.ReadLine()
+		line, err := reader.ReadString('\n')
+		// line, _, err := reader.ReadLine()
 		if err == io.EOF {
 			break
 		} else if err != nil {
 			return nil, fmt.Errorf("ReadTextLines: %v", err)
 		}
-		a = append(a, string(line))
+		// a = append(a, string(line))
+		a = append(a, line[:len(line)-1])
 	}
 
 	// scanner, a := bufio.NewScanner(file), make([]string, 0)
