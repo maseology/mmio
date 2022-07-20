@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
 	"os"
@@ -101,6 +102,15 @@ func ReadFloat64(b *bytes.Reader) float64 {
 	return f
 }
 
+// ReadBytes reads next n-byte array from buffer
+func ReadBytes(b *bytes.Reader, n int) []byte {
+	i := make([]byte, n)
+	if err := binary.Read(b, binary.LittleEndian, &i); err != nil {
+		fmt.Println("ReadUInt8 failed:", err)
+	}
+	return i
+}
+
 // ReadUInt8 reads next uint8 from buffer
 func ReadUInt8(b *bytes.Reader) uint8 {
 	var i uint8
@@ -153,6 +163,18 @@ func ReadInt32(b *bytes.Reader) int32 {
 		fmt.Println("ReadInt32 failed:", err)
 	}
 	return i
+}
+
+// ReadInt32check reads next int32 from buffer
+func ReadInt32check(b *bytes.Reader) (int32, bool) {
+	var i int32
+	if err := binary.Read(b, binary.LittleEndian, &i); err != nil {
+		if err == io.EOF {
+			return 0, false
+		}
+		log.Fatalf("ReadInt32check failed: %v", err)
+	}
+	return i, true
 }
 
 // ReadInt64 reads next int64 from buffer
