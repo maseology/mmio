@@ -73,6 +73,9 @@ func ReadTextLines(fp string) ([]string, error) {
 		line, err := reader.ReadString('\n')
 		// line, _, err := reader.ReadLine()
 		if err == io.EOF {
+			if len(line) > 0 {
+				a = append(a, strings.TrimSpace(line))
+			}
 			break
 		} else if err != nil {
 			return nil, fmt.Errorf("ReadTextLines: %v", err)
