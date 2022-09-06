@@ -22,3 +22,20 @@ func WriteCsvDateFloats(csvfp, header string, t []time.Time, d ...[]float64) err
 	}
 	return nil
 }
+
+func WriteCsvIntInts(csvfp, header string, ii map[int]int) error {
+	csv := NewCSVwriter(csvfp)
+	defer csv.Close()
+	if err := csv.WriteHead(header); err != nil {
+		return err
+	}
+	for k, v := range ii {
+		iv := make([]interface{}, 2)
+		iv[0] = k
+		iv[1] = v
+		if err := csv.WriteLine(iv...); err != nil {
+			return err
+		}
+	}
+	return nil
+}
