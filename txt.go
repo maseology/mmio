@@ -11,7 +11,7 @@ import (
 // TXTwriter general text writer
 type TXTwriter struct {
 	file   *os.File
-	writer *bufio.Writer
+	Writer *bufio.Writer
 }
 
 // NewTXTwriter constructor
@@ -22,20 +22,20 @@ func NewTXTwriter(fp string) (*TXTwriter, error) {
 	}
 	nt := &TXTwriter{
 		file:   file,
-		writer: bufio.NewWriter(file),
+		Writer: bufio.NewWriter(file),
 	}
 	return nt, nil
 }
 
 // Close closes TXTwriter
 func (w *TXTwriter) Close() {
-	w.writer.Flush()
+	w.Writer.Flush()
 	w.file.Close()
 }
 
 // Write is a general textfile writer method for TXTwriter
 func (w *TXTwriter) Write(s string) error {
-	_, err := w.writer.WriteString(s)
+	_, err := w.Writer.WriteString(s)
 	if err != nil {
 		return fmt.Errorf("Cannot write to file: %v", err)
 	}
@@ -44,7 +44,7 @@ func (w *TXTwriter) Write(s string) error {
 
 // WriteLine is a general textfile line writer method for TXTwriter
 func (w *TXTwriter) WriteLine(line string) error {
-	_, err := w.writer.WriteString(line + "\n")
+	_, err := w.Writer.WriteString(line + "\n")
 	if err != nil {
 		return fmt.Errorf("Cannot write line to file: %v", err)
 	}
@@ -53,7 +53,7 @@ func (w *TXTwriter) WriteLine(line string) error {
 
 // WriteBytes general textfile line writer method for TXTwriter
 func (w *TXTwriter) WriteBytes(b []byte) error {
-	_, err := w.writer.Write(b)
+	_, err := w.Writer.Write(b)
 	if err != nil {
 		return fmt.Errorf("Cannot write to file: %v", err)
 	}

@@ -1,5 +1,7 @@
 package mmio
 
+import "math"
+
 // BitArray converts a slice of bytes to a slice of boolean
 func BitArray(b []byte) []bool {
 	a := make([]bool, len(b)*8)
@@ -40,4 +42,31 @@ func BitArray1(b byte) []bool {
 		a[7] = true
 	}
 	return a
+}
+
+// BitArrayRev converts a slice of boolean to a slice of bytes
+func BitArrayRev(b []bool) []byte {
+	n := int(math.Ceil(float64(len(b)) / 8))
+	a := make([]byte, 0, n)
+	for i := 0; i < len(b); i += 8 {
+		bb := b[i : i+8]
+		for i2, j := 0, len(bb)-1; i2 < j; i2, j = i2+1, j-1 { // reversing slice
+			bb[i2], bb[j] = bb[j], bb[i2]
+		}
+		a = append(a, BitArray1Rev(bb))
+	}
+	return a
+}
+
+// BitArray1Rev converts a slice of boolean to a byte
+// https://stackoverflow.com/questions/73710132/golang-convert-8bool-to-byte
+func BitArray1Rev(b []bool) byte {
+	var result byte
+	for _, b := range b {
+		result <<= 1
+		if b {
+			result |= 1
+		}
+	}
+	return result
 }
