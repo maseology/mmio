@@ -52,8 +52,8 @@ func MMtime(d time.Time) string {
 	return d.Format("060102150405")
 }
 
-// DayDate returns the input time as a date
-func DayDate(t time.Time) time.Time {
-	year, month, day := t.Date()
-	return time.Date(year, month, day, 0, 0, 0, 0, t.Location())
-}
+// // DayDate returns the input time as a date
+// func DayDate(t time.Time) time.Time {
+// 	year, month, day := t.Date()
+// 	return time.Date(year, month, day, 0, 0, 0, 0, t.Location())
+// }

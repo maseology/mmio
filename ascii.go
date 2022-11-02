@@ -76,6 +76,10 @@ func WriteFloats(fp string, d []float64) error {
 	return nil
 }
 
+func WriteLines(fp string, s []string) error {
+	return WriteStrings(fp, s)
+}
+
 // WriteStrings is a simple routine that writes a slice of strings to an ascii file
 func WriteStrings(fp string, s []string) error {
 	f, err := os.OpenFile(fp, os.O_CREATE|os.O_WRONLY, 0644)

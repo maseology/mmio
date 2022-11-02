@@ -9,7 +9,7 @@ import (
 )
 
 // ReadCsvDateFloat reads temporal csv file "date,value,flag,..."
-func ReadCsvDateFloat(csvfp string) (map[time.Time]float64, error) {
+func ReadCsvDateFloat(csvfp string) (map[int64]float64, error) {
 	f, err := os.Open(csvfp)
 	if err != nil {
 		fmt.Printf("ReadCsvDateFloat failed: %v\n", err)
@@ -18,7 +18,7 @@ func ReadCsvDateFloat(csvfp string) (map[time.Time]float64, error) {
 	defer f.Close()
 
 	recs := LoadCSV(io.Reader(f))
-	o := make(map[time.Time]float64, len(recs)-1)
+	o := make(map[int64]float64, len(recs)-1)
 	for rec := range recs {
 		t, err := time.Parse("2006-01-02", rec[0])
 		if err != nil {
@@ -34,7 +34,7 @@ func ReadCsvDateFloat(csvfp string) (map[time.Time]float64, error) {
 		if err != nil {
 			return nil, fmt.Errorf("value parse error: %v", err)
 		}
-		o[t] = v
+		o[t.Unix()] = v
 	}
 	return o, nil
 }
