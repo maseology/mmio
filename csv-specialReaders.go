@@ -28,7 +28,11 @@ func ReadCsvDateFloat(csvfp string) (map[int64]float64, error) {
 				if err != nil {
 					return nil, fmt.Errorf("date parse error in %s: %v", csvfp, err)
 				}
+			} else {
+				t = time.Date(t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second(), 0, time.Local)
 			}
+		} else {
+			t = time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, time.Local)
 		}
 		v, err := strconv.ParseFloat(rec[1], 64)
 		if err != nil {
