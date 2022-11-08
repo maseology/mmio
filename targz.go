@@ -27,7 +27,11 @@ func CompressTarGZext(path, ext string) (string, error) {
 	if _, err := os.Stat(path); err != nil {
 		return "", fmt.Errorf("unable to tar files - %v", err.Error())
 	}
-	return compressTarGZ(FileListExt(path, ext), path)
+	fps, err := FileListExt(path, ext)
+	if err != nil {
+		return "", err
+	}
+	return compressTarGZ(fps, path)
 }
 
 func compressTarGZ(fps []string, path string) (string, error) {

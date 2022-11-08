@@ -26,7 +26,11 @@ func DeleteFile(fp string) {
 // DeleteAllInDirectory deletes all files of a given extension in a specified directory
 // exension format: ".***"
 func DeleteAllInDirectory(dir, ext string) {
-	for _, fp := range FileListExt(dir, ext) {
+	fps, err := FileListExt(dir, ext)
+	if err != nil {
+		panic(err)
+	}
+	for _, fp := range fps {
 		DeleteFile(fp)
 	}
 }
@@ -133,11 +137,11 @@ func FileList(path string) ([]string, error) {
 // FileListExt returns a list of files of a given extension from a directory.
 // directories should end with "/" and extensions start with ".".
 // exension format: ".***"
-func FileListExt(dir, ext string) []string {
+func FileListExt(dir, ext string) ([]string, error) {
 	dir = cleanDir(dir)
 	files, err := ioutil.ReadDir(dir)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 
 	var flst []string
@@ -146,7 +150,7 @@ func FileListExt(dir, ext string) []string {
 			flst = append(flst, dir+file.Name())
 		}
 	}
-	return flst
+	return flst, nil
 }
 
 // DirList returns a list of subdirectories
