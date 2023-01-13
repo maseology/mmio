@@ -174,6 +174,7 @@ func DirList(root string) ([]string, error) {
 }
 
 // GetExtension returns the file path extension
+// returns with dot following extension
 func GetExtension(fp string) string {
 	return filepath.Ext(fp)
 }

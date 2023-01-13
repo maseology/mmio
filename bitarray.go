@@ -49,7 +49,11 @@ func BitArrayRev(b []bool) []byte {
 	n := int(math.Ceil(float64(len(b)) / 8))
 	a := make([]byte, 0, n)
 	for i := 0; i < len(b); i += 8 {
-		bb := b[i : i+8]
+		i8 := i + 8
+		if i8 > len(b) {
+			i8 = len(b)
+		}
+		bb := b[i:i8]
 		for i2, j := 0, len(bb)-1; i2 < j; i2, j = i2+1, j-1 { // reversing slice
 			bb[i2], bb[j] = bb[j], bb[i2]
 		}

@@ -146,9 +146,10 @@ func WriteCSV2d(fp, h string, dat [][]interface{}) {
 	csv.WriteHead(h)
 	for _, ln := range dat {
 		iv := make([]interface{}, len(ln))
-		for i, v := range ln {
-			iv[i] = v
-		}
+		copy(iv, ln)
+		// for i, v := range ln {
+		// 	iv[i] = v
+		// }
 		csv.WriteLine(iv...)
 	}
 }
