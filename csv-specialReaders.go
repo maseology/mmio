@@ -17,7 +17,7 @@ func ReadCsvDateFloat(csvfp string) (map[int64]float64, error) {
 	}
 	defer f.Close()
 
-	recs := LoadCSV(io.Reader(f))
+	recs := LoadCSV(io.Reader(f), 1)
 	o := make(map[int64]float64, len(recs)-1)
 	for rec := range recs {
 		t, err := time.Parse("2006-01-02", rec[0])
@@ -53,7 +53,7 @@ func ReadCsvDateFloats(csvfp string) (map[time.Time][]float64, error) {
 	defer f.Close()
 
 	ncol := ncolsCSV(io.Reader(f))
-	recs := LoadCSV(io.Reader(f))
+	recs := LoadCSV(io.Reader(f), 1)
 	o := make(map[time.Time][]float64, len(recs)-1)
 	for rec := range recs {
 		t, err := time.Parse("2006-01-02", rec[0])
@@ -87,7 +87,7 @@ func ReadCsvStringInt(csvfp string) (map[string]int, error) {
 	}
 	defer f.Close()
 
-	recs := LoadCSV(io.Reader(f))
+	recs := LoadCSV(io.Reader(f), 1)
 	o := make(map[string]int, len(recs)-1)
 	for rec := range recs {
 		v, err := strconv.Atoi(rec[1])
@@ -108,7 +108,7 @@ func ReadCsvStringFloat(csvfp string) (map[string]float64, error) {
 	}
 	defer f.Close()
 
-	recs := LoadCSV(io.Reader(f))
+	recs := LoadCSV(io.Reader(f), 1)
 	o := make(map[string]float64, len(recs)-1)
 	for rec := range recs {
 		v, err := strconv.ParseFloat(rec[1], 64)

@@ -11,7 +11,7 @@ import (
 )
 
 // ReadCSV general CSV reader (must be completely numeric)
-func ReadCSV(filepath string) ([][]float64, error) {
+func ReadCSV(filepath string, nHeaderLines int) ([][]float64, error) {
 	f, err := os.Open(filepath)
 	if err != nil {
 		fmt.Printf("ReadCSV failed: %v\n", err)
@@ -19,7 +19,7 @@ func ReadCSV(filepath string) ([][]float64, error) {
 	}
 	defer f.Close()
 	var fout [][]float64
-	for rec := range LoadCSV(io.Reader(f)) {
+	for rec := range LoadCSV(io.Reader(f), nHeaderLines) {
 		f1 := make([]float64, 0, len(rec))
 		for i, c := range rec {
 			f2, err := strconv.ParseFloat(c, 64)
@@ -44,13 +44,16 @@ func ncolsCSV(rc io.Reader) int {
 }
 
 // LoadCSV  use: for rec := range LoadCSV(io.Reader(f)) {
-func LoadCSV(rc io.Reader) (ch chan []string) {
+func LoadCSV(rc io.Reader, nHeaderLines int) (ch chan []string) {
 	ch = make(chan []string)
 	go func() {
 		r := csv.NewReader(rc)
-		if _, err := r.Read(); err != nil { //read header
-			log.Fatal(err)
+		for l := 0; l < nHeaderLines; l++ {
+			if _, err := r.Read(); err != nil { //read header(s)
+				log.Fatal(err)
+			}
 		}
+
 		defer close(ch)
 		for {
 			rec, err := r.Read()
