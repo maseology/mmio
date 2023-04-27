@@ -194,8 +194,27 @@ func lineParser(r rune) bool {
 	return r == '\r' || r == '\n'
 }
 
+// ReadBinaryFloats reads an entire file and returns a slice of floats
+func ReadBinaryFloats(filepath string) ([]float64, error) {
+	var err error
+	b, err := ioutil.ReadFile(filepath)
+	if err != nil {
+		fmt.Printf("ReadBinaryFloats failed: %v\n", err)
+		return nil, fmt.Errorf("ioutil.ReadFile failed: %v", err)
+	}
+	buf := bytes.NewReader(b)
+	n := len(b) / 8
+	a := make([]float64, n)
+	err = binary.Read(buf, binary.LittleEndian, a)
+	if err != nil {
+		fmt.Printf("ReadBinaryFloats failed: %v\n", err)
+		return nil, fmt.Errorf("binary.Read failed: %v", err)
+	}
+	return a, nil
+}
+
 // ReadBinaryFloats reads an entire file and returns a slice of d dimensions
-func ReadBinaryFloats(filepath string, d int) ([][]float64, int, error) {
+func ReadBinaryFloat64s(filepath string, d int) ([][]float64, int, error) {
 	var err error
 	b, err := ioutil.ReadFile(filepath)
 	if err != nil {

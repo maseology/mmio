@@ -8,10 +8,10 @@ import (
 // SaveGOB saves map[int]int
 func SaveGOB(fp string, d map[int]int) error {
 	f, err := os.Create(fp)
-	defer f.Close()
 	if err != nil {
 		return err
 	}
+	defer f.Close()
 	enc := gob.NewEncoder(f)
 	err = enc.Encode(d)
 	if err != nil {
@@ -24,10 +24,10 @@ func SaveGOB(fp string, d map[int]int) error {
 func LoadGOB(fp string) (map[int]int, error) {
 	var d map[int]int
 	f, err := os.Open(fp)
-	defer f.Close()
 	if err != nil {
 		return nil, err
 	}
+	defer f.Close()
 	enc := gob.NewDecoder(f)
 	err = enc.Decode(&d)
 	if err != nil {
