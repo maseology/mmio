@@ -8,6 +8,26 @@ import (
 	"time"
 )
 
+func dateParse(s string) (time.Time, error) {
+	t, err := time.Parse("2006-01-02", s)
+	if err != nil {
+		t, err = time.Parse("2006-01-02 15:04:05", s)
+		if err != nil {
+			t, err = time.Parse("2006-01-02T15:04:05", s)
+			if err != nil {
+				t, err = time.Parse("2006-01-02 15:04:05 +0000 UTC", s)
+				if err != nil {
+					t, err = time.Parse("2006-01-02 15:04", s)
+					if err != nil {
+						return time.Time{}, err
+					}
+				}
+			}
+		}
+	}
+	return t, nil
+}
+
 // ReadCsvDateFloat reads temporal csv file "date,value,flag,..."
 func ReadCsvDateFloat(csvfp string) (map[int64]float64, error) {
 	f, err := os.Open(csvfp)
@@ -20,20 +40,24 @@ func ReadCsvDateFloat(csvfp string) (map[int64]float64, error) {
 	recs := LoadCSV(io.Reader(f), 1)
 	o := make(map[int64]float64, len(recs)-1)
 	for rec := range recs {
-		t, err := time.Parse("2006-01-02", rec[0])
+		t, err := dateParse(rec[0])
 		if err != nil {
-			t, err = time.Parse("2006-01-02T15:04:05", rec[0])
-			if err != nil {
-				t, err = time.Parse("2006-01-02 15:04:05 +0000 UTC", rec[0])
-				if err != nil {
-					return nil, fmt.Errorf("date parse error in %s: %v", csvfp, err)
-				}
-			} else {
-				t = time.Date(t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second(), 0, time.Local)
-			}
-		} else {
-			t = time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, time.Local)
+			return nil, fmt.Errorf("date parse error in %s: %v", csvfp, err)
 		}
+		// t, err := time.Parse("2006-01-02", rec[0])
+		// if err != nil {
+		// 	t, err = time.Parse("2006-01-02T15:04:05", rec[0])
+		// 	if err != nil {
+		// 		t, err = time.Parse("20 06-01-02 15:04:05 +0000 UTC", rec[0])
+		// 		if err != nil {
+		// 			return nil, fmt.Errorf("date parse error in %s: %v", csvfp, err)
+		// 		}
+		// 	} else {
+		// 		t = time.Date(t.Year(), t.Month(), t.Day(), t.Hour(), t.Minute(), t.Second(), 0, time.Local)
+		// 	}
+		// } else {
+		// 	t = time.Date(t.Year(), t.Month(), t.Day(), 0, 0, 0, 0, time.Local)
+		// }
 		v, err := strconv.ParseFloat(rec[1], 64)
 		if err != nil {
 			return nil, fmt.Errorf("value parse error: %v", err)
@@ -52,23 +76,33 @@ func ReadCsvDateFloats(csvfp string) (map[time.Time][]float64, error) {
 	}
 	defer f.Close()
 
-	ncol := ncolsCSV(io.Reader(f))
 	recs := LoadCSV(io.Reader(f), 1)
+	ncol := -1 // ncolsCSV(io.Reader(f)) - 1
 	o := make(map[time.Time][]float64, len(recs)-1)
 	for rec := range recs {
-		t, err := time.Parse("2006-01-02", rec[0])
+		t, err := dateParse(rec[0])
 		if err != nil {
-			t, err = time.Parse("2006-01-02T15:04:05", rec[0])
-			if err != nil {
-				t, err = time.Parse("2006-01-02 15:04:05 +0000 UTC", rec[0])
-				if err != nil {
-					return nil, fmt.Errorf("date parse error in %s: %v", csvfp, err)
-				}
-			}
+			return nil, fmt.Errorf("date parse error in %s: %v", csvfp, err)
+		}
+		// t, err := time.Parse("2006-01-02", rec[0])
+		// if err != nil {
+		// 	t, err = time.Parse("2006-01-02T15:04:05", rec[0])
+		// 	if err != nil {
+		// 		t, err = time.Parse("2006-01-02 15:04:05 +0000 UTC", rec[0])
+		// 		if err != nil {
+		// 			t, err = time.Parse("2006-01-02 15:04", rec[0])
+		// 			if err != nil {
+		// 				return nil, fmt.Errorf("date parse error in %s: %v", csvfp, err)
+		// 			}
+		// 		}
+		// 	}
+		// }
+		if ncol < 0 {
+			ncol = len(rec) - 1
 		}
 		vs := make([]float64, ncol)
-		for i := 1; i < ncol; i++ {
-			vs[i], err = strconv.ParseFloat(rec[i], 64)
+		for i := 0; i < ncol; i++ {
+			vs[i], err = strconv.ParseFloat(rec[i+1], 64)
 			if err != nil {
 				return nil, fmt.Errorf("value parse error: %v", err)
 			}

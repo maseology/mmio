@@ -19,7 +19,9 @@ func ReadCSV(filepath string, nHeaderLines int) ([][]float64, error) {
 	}
 	defer f.Close()
 	var fout [][]float64
-	for rec := range LoadCSV(io.Reader(f), nHeaderLines) {
+	recs := LoadCSV(io.Reader(f), nHeaderLines)
+	// for rec := range LoadCSV(io.Reader(f), nHeaderLines) {
+	for rec := range recs {
 		f1 := make([]float64, 0, len(rec))
 		for i, c := range rec {
 			f2, err := strconv.ParseFloat(c, 64)
@@ -46,14 +48,14 @@ func ncolsCSV(rc io.Reader) int {
 // LoadCSV  use: for rec := range LoadCSV(io.Reader(f)) {
 func LoadCSV(rc io.Reader, nHeaderLines int) (ch chan []string) {
 	ch = make(chan []string)
+
 	go func() {
 		r := csv.NewReader(rc)
 		for l := 0; l < nHeaderLines; l++ {
 			if _, err := r.Read(); err != nil { //read header(s)
-				log.Fatal(err)
+				log.Fatalf("LoadCSV error: %v", err)
 			}
 		}
-
 		defer close(ch)
 		for {
 			rec, err := r.Read()
@@ -61,12 +63,43 @@ func LoadCSV(rc io.Reader, nHeaderLines int) (ch chan []string) {
 				if err == io.EOF {
 					break
 				}
-				log.Fatal(err)
+				log.Fatalf("LoadCSV error: %v", err)
 			}
 			ch <- rec
 		}
 	}()
 	return
+}
+
+func LoadCsvArray(fp string, nHeaderLines int) [][]string {
+	a := make([][]string, 0)
+
+	f, err := os.Open(fp)
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+	r := csv.NewReader(io.Reader(f))
+
+	for l := 0; l < nHeaderLines; l++ {
+		if rec, err := r.Read(); err != nil { //read header(s)
+			log.Fatalf("LoadCSV error: %v", err)
+		} else {
+			fmt.Println(rec)
+		}
+	}
+
+	for {
+		rec, err := r.Read()
+		if err != nil {
+			if err == io.EOF {
+				break
+			}
+			log.Fatalf("LoadCSV error: %v", err)
+		}
+		a = append(a, rec)
+	}
+	return a
 }
 
 // CSVwriter general CSV writer
