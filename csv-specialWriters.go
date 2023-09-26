@@ -25,7 +25,7 @@ func WriteCsvFloats(csvfp, header string, d ...[]float64) error {
 func WriteCsvDateFloats(csvfp, header string, t []time.Time, d ...[]float64) error {
 	csv := NewCSVwriter(csvfp)
 	defer csv.Close()
-	if err := csv.WriteHead(header); err != nil {
+	if err := csv.WriteHead("date," + header); err != nil {
 		return err
 	}
 	nc := len(d)
