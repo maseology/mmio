@@ -82,7 +82,8 @@ func WriteLines(fp string, s []string) error {
 
 // WriteStrings is a simple routine that writes a slice of strings to an ascii file
 func WriteStrings(fp string, s []string) error {
-	f, err := os.OpenFile(fp, os.O_CREATE|os.O_WRONLY, 0644)
+	f, err := os.Create(fp)
+	// f, err := os.OpenFile(fp, os.O_CREATE|os.O_WRONLY, 0644)
 	// f, err := os.OpenFile(fp, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644) // append
 	if err != nil {
 		return err
