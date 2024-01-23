@@ -76,6 +76,10 @@ func WriteFloats(fp string, d []float64) error {
 	return nil
 }
 
+func LinesToAscii(fp string, s []string) error {
+	return WriteStrings(fp, s)
+}
+
 func WriteLines(fp string, s []string) error {
 	return WriteStrings(fp, s)
 }
