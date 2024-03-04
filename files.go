@@ -3,7 +3,6 @@ package mmio
 import (
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"path/filepath"
@@ -45,7 +44,7 @@ func DeleteDir(dir string) {
 
 // DeleteAllSubdirectories deletes all subdirectories within a specified directory
 func DeleteAllSubdirectories(dir string) {
-	files, err := ioutil.ReadDir(dir)
+	files, err := os.ReadDir(dir)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -139,7 +138,7 @@ func FileList(path string) ([]string, error) {
 // exension format: ".***"
 func FileListExt(dir, ext string) ([]string, error) {
 	dir = cleanDir(dir)
-	files, err := ioutil.ReadDir(dir)
+	files, err := os.ReadDir(dir)
 	if err != nil {
 		return nil, err
 	}
