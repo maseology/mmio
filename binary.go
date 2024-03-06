@@ -5,7 +5,6 @@ import (
 	"encoding/binary"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"log"
 	"os"
 	"strings"
@@ -26,7 +25,7 @@ import (
 
 // OpenBinary creates reader from filepath
 func OpenBinary(filepath string) *bytes.Reader {
-	b, err := ioutil.ReadFile(filepath)
+	b, err := os.ReadFile(filepath)
 	if err != nil {
 		log.Fatalf("Fatal error: binary.OpenBinary failed: %v\n", err)
 	}
@@ -35,10 +34,10 @@ func OpenBinary(filepath string) *bytes.Reader {
 
 // ReadBinary general binary reader
 func ReadBinary(filepath string, data ...interface{}) error {
-	b, err := ioutil.ReadFile(filepath)
+	b, err := os.ReadFile(filepath)
 	if err != nil {
 		fmt.Printf("ReadBinary failed: %v\n", err)
-		return fmt.Errorf("ioutil.ReadFile failed: %v", err)
+		return fmt.Errorf("os.ReadFile failed: %v", err)
 	}
 	buf := bytes.NewReader(b)
 	for _, v := range data {
@@ -197,10 +196,10 @@ func lineParser(r rune) bool {
 // ReadBinaryFloats reads an entire file and returns a slice of floats
 func ReadBinaryFloats(filepath string) ([]float64, error) {
 	var err error
-	b, err := ioutil.ReadFile(filepath)
+	b, err := os.ReadFile(filepath)
 	if err != nil {
 		fmt.Printf("ReadBinaryFloats failed: %v\n", err)
-		return nil, fmt.Errorf("ioutil.ReadFile failed: %v", err)
+		return nil, fmt.Errorf("os.ReadFile failed: %v", err)
 	}
 	buf := bytes.NewReader(b)
 	n := len(b) / 8
@@ -216,10 +215,10 @@ func ReadBinaryFloats(filepath string) ([]float64, error) {
 // ReadBinaryFloats reads an entire file and returns a slice of d dimensions
 func ReadBinaryFloat64s(filepath string, d int) ([][]float64, int, error) {
 	var err error
-	b, err := ioutil.ReadFile(filepath)
+	b, err := os.ReadFile(filepath)
 	if err != nil {
 		fmt.Printf("ReadBinaryFloats failed: %v\n", err)
-		return nil, 0, fmt.Errorf("ioutil.ReadFile failed: %v", err)
+		return nil, 0, fmt.Errorf("os.ReadFile failed: %v", err)
 	}
 	buf := bytes.NewReader(b)
 	n := len(b) / 8 / d
@@ -239,10 +238,10 @@ func ReadBinaryFloat64s(filepath string, d int) ([][]float64, int, error) {
 // ReadBinaryFloat32s reads an entire file and returns a slice of d dimensions
 func ReadBinaryFloat32s(filepath string, d int) ([][]float32, int, error) {
 	var err error
-	b, err := ioutil.ReadFile(filepath)
+	b, err := os.ReadFile(filepath)
 	if err != nil {
 		fmt.Printf("ReadBinaryFloats failed: %v\n", err)
-		return nil, 0, fmt.Errorf("ioutil.ReadFile failed: %v", err)
+		return nil, 0, fmt.Errorf("os.ReadFile failed: %v", err)
 	}
 	buf := bytes.NewReader(b)
 	n := len(b) / 4 / d
@@ -262,9 +261,9 @@ func ReadBinaryFloat32s(filepath string, d int) ([][]float32, int, error) {
 // ReadBinaryInts reads an entire file and returns a slice of d dimensions
 func ReadBinaryInts(filepath string, d int) ([][]int32, int, error) {
 	var err error
-	b, err := ioutil.ReadFile(filepath)
+	b, err := os.ReadFile(filepath)
 	if err != nil {
-		return nil, 0, fmt.Errorf("ReadBinaryInts: ioutil.ReadFile failed: %v", err)
+		return nil, 0, fmt.Errorf("ReadBinaryInts: os.ReadFile failed: %v", err)
 	}
 	buf := bytes.NewReader(b)
 	n := len(b) / 4 / d
@@ -283,9 +282,9 @@ func ReadBinaryInts(filepath string, d int) ([][]int32, int, error) {
 // ReadBinaryShorts reads an entire file and returns a slice of d dimensions
 func ReadBinaryShorts(filepath string, d int) ([][]int16, int, error) {
 	var err error
-	b, err := ioutil.ReadFile(filepath)
+	b, err := os.ReadFile(filepath)
 	if err != nil {
-		return nil, 0, fmt.Errorf("ReadBinaryShorts: ioutil.ReadFile failed: %v", err)
+		return nil, 0, fmt.Errorf("ReadBinaryShorts: os.ReadFile failed: %v", err)
 	}
 	buf := bytes.NewReader(b)
 	n := len(b) / 2 / d
@@ -304,9 +303,9 @@ func ReadBinaryShorts(filepath string, d int) ([][]int16, int, error) {
 // ReadBinaryIMAP reads a map[int]int for an entire file
 func ReadBinaryIMAP(filepath string) (map[int]int, error) {
 	var err error
-	b, err := ioutil.ReadFile(filepath)
+	b, err := os.ReadFile(filepath)
 	if err != nil {
-		return nil, fmt.Errorf("ReadBinaryIMAP: ioutil.ReadFile failed: %v", err)
+		return nil, fmt.Errorf("ReadBinaryIMAP: os.ReadFile failed: %v", err)
 	}
 	buf := bytes.NewReader(b)
 	n := len(b) / 8
@@ -324,9 +323,9 @@ func ReadBinaryIMAP(filepath string) (map[int]int, error) {
 // ReadBinaryRMAP reads a map[int]float64 for an entire file
 func ReadBinaryRMAP(filepath string) (map[int]float64, error) {
 	var err error
-	b, err := ioutil.ReadFile(filepath)
+	b, err := os.ReadFile(filepath)
 	if err != nil {
-		return nil, fmt.Errorf("ReadBinaryRMAP: ioutil.ReadFile failed: %v", err)
+		return nil, fmt.Errorf("ReadBinaryRMAP: os.ReadFile failed: %v", err)
 	}
 	buf := bytes.NewReader(b)
 	type Dat struct {
@@ -353,7 +352,7 @@ func WriteBinary(filepath string, data ...interface{}) error {
 			return fmt.Errorf("mmio.WriteBinary failed: %v", err)
 		}
 	}
-	if err := ioutil.WriteFile(filepath, buf.Bytes(), 0644); err != nil { // see: https://en.wikipedia.org/wiki/File_system_permissions
+	if err := os.WriteFile(filepath, buf.Bytes(), 0644); err != nil { // see: https://en.wikipedia.org/wiki/File_system_permissions
 		return fmt.Errorf("mmio.WriteBinary failed: %v", err)
 	}
 	return nil
@@ -370,8 +369,8 @@ func WriteIMAP(filepath string, data map[int]int) error {
 			log.Fatalln("WriteBinary failed:", err)
 		}
 	}
-	if err := ioutil.WriteFile(filepath, buf.Bytes(), 0644); err != nil { // see: https://en.wikipedia.org/wiki/File_system_permissions
-		return fmt.Errorf(" ioutil.WriteIMAP failed: %v", err)
+	if err := os.WriteFile(filepath, buf.Bytes(), 0644); err != nil { // see: https://en.wikipedia.org/wiki/File_system_permissions
+		return fmt.Errorf(" os.WriteIMAP failed: %v", err)
 	}
 	return nil
 }
@@ -401,8 +400,8 @@ func WriteRMAP(filepath string, data map[int]float64, append bool) error {
 			return err
 		}
 	} else {
-		if err := ioutil.WriteFile(filepath, buf.Bytes(), 0644); err != nil { // see: https://en.wikipedia.org/wiki/File_system_permissions
-			return fmt.Errorf(" ioutil.WriteRMAP failed: %v", err)
+		if err := os.WriteFile(filepath, buf.Bytes(), 0644); err != nil { // see: https://en.wikipedia.org/wiki/File_system_permissions
+			return fmt.Errorf(" os.WriteRMAP failed: %v", err)
 		}
 	}
 	return nil
