@@ -22,6 +22,26 @@ func WriteCsvFloats(csvfp, header string, d ...[]float64) error {
 	return nil
 }
 
+func WriteCsvFloats32(csvfp, header string, d ...[]float32) error {
+	csv := NewCSVwriter(csvfp)
+	defer csv.Close()
+	if err := csv.WriteHead(header); err != nil {
+		return err
+	}
+	nc := len(d)
+	nr := len(d[0])
+	for i := 0; i < nr; i++ {
+		iv := make([]interface{}, nc)
+		for j := 0; j < nc; j++ {
+			iv[j] = d[j][i]
+		}
+		if err := csv.WriteLine(iv...); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
 func WriteCsvDateFloats(csvfp, header string, t []time.Time, d ...[]float64) error {
 	csv := NewCSVwriter(csvfp)
 	defer csv.Close()
