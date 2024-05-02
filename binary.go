@@ -300,6 +300,27 @@ func ReadBinaryShorts(filepath string, d int) ([][]int16, int, error) {
 	return a, n, nil
 }
 
+// ReadBinaryBytes reads an entire file and returns a slice of d dimensions
+func ReadBinaryBytes(filepath string, d int) ([][]uint8, int, error) {
+	var err error
+	b, err := os.ReadFile(filepath)
+	if err != nil {
+		return nil, 0, fmt.Errorf("ReadBinaryBytes: os.ReadFile failed: %v", err)
+	}
+	buf := bytes.NewReader(b)
+	n := len(b) / d
+	a := make([][]uint8, d)
+	for i := 0; i < d; i++ {
+		v := make([]uint8, n)
+		err := binary.Read(buf, binary.LittleEndian, v)
+		if err != nil {
+			return nil, 0, fmt.Errorf("ReadBinaryBytes: binary.Read failed: %v", err)
+		}
+		a[i] = v
+	}
+	return a, n, nil
+}
+
 // ReadBinaryIMAP reads a map[int]int for an entire file
 func ReadBinaryIMAP(filepath string) (map[int]int, error) {
 	var err error
