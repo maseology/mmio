@@ -201,6 +201,36 @@ func FileRename(oldName, newName string, overwrite bool) {
 	}
 }
 
+// CopyFile copies a file (modified from https://opensource.com/article/18/6/copying-files-go)
+func CopyFile(src, dst string) (int64, error) {
+	if _, ok := FileExists(src); !ok {
+		return 0, nil
+	}
+
+	sourceFileStat, err := os.Stat(src)
+	if err != nil {
+		return 0, err
+	}
+
+	if !sourceFileStat.Mode().IsRegular() {
+		return 0, fmt.Errorf("%s is not a regular file", src)
+	}
+
+	source, err := os.Open(src)
+	if err != nil {
+		return 0, err
+	}
+	defer source.Close()
+
+	destination, err := os.Create(dst)
+	if err != nil {
+		return 0, err
+	}
+	defer destination.Close()
+	nBytes, err := io.Copy(destination, source)
+	return nBytes, err
+}
+
 // MoveFile moves a file (https://stackoverflow.com/questions/50740902/move-a-file-to-a-different-drive-with-go)
 func MoveFile(sourcePath, destPath string) error {
 	inputFile, err := os.Open(sourcePath)
