@@ -82,11 +82,14 @@ func LoadCsvArray(fp string, nHeaderLines int) [][]string {
 	r := csv.NewReader(io.Reader(f))
 
 	for l := 0; l < nHeaderLines; l++ {
-		if rec, err := r.Read(); err != nil { //read header(s)
+		if _, err := r.Read(); err != nil { //read header(s)
 			log.Fatalf("LoadCSV error: %v", err)
-		} else {
-			fmt.Println(rec)
 		}
+		// if rec, err := r.Read(); err != nil { //read header(s)
+		// 	log.Fatalf("LoadCSV error: %v", err)
+		// } else {
+		// 	fmt.Println(rec)
+		// }
 	}
 
 	for {

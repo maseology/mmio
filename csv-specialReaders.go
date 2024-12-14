@@ -3,6 +3,7 @@ package mmio
 import (
 	"fmt"
 	"io"
+	"math"
 	"os"
 	"strconv"
 	"time"
@@ -55,9 +56,13 @@ func ReadCsvDateFloats(csvfp string) (map[time.Time][]float64, error) {
 		}
 		vs := make([]float64, ncol)
 		for i := 0; i < ncol; i++ {
-			vs[i], err = strconv.ParseFloat(rec[i+1], 64)
-			if err != nil {
-				return nil, fmt.Errorf("value parse error: %v", err)
+			if rec[i+1] == "NA" {
+				vs[i] = math.NaN()
+			} else {
+				vs[i], err = strconv.ParseFloat(rec[i+1], 64)
+				if err != nil {
+					return nil, fmt.Errorf("value parse error: %v", err)
+				}
 			}
 		}
 		o[t] = vs
