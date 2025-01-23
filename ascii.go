@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 )
 
 // ReadInts is a simple routine that reads an integer slice to an ascii file
@@ -54,6 +55,27 @@ func ReadFloats(fp string) ([]float64, error) {
 			return nil, err
 		}
 		da[i] = d
+	}
+	return da, nil
+}
+
+// ReadTabFloats is a simple routine that reads an float slice to an ascii file
+func ReadTabFloats(fp string) ([][]float64, error) {
+	sa, err := ReadTextLines(fp)
+	if err != nil {
+		return nil, err
+	}
+	da := make([][]float64, len(sa))
+	for i, ln := range sa {
+		stp := strings.Split(RemoveWhiteSpaces(ln), " ")
+		da[i] = make([]float64, len(stp))
+		for j, s := range stp {
+			d, err := strconv.ParseFloat(s, 64)
+			if err != nil {
+				return nil, err
+			}
+			da[i][j] = d
+		}
 	}
 	return da, nil
 }
