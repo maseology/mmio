@@ -264,3 +264,15 @@ func CreateEmpty(filepath string) error {
 	emptyFile.Close()
 	return nil
 }
+
+func RelativeFileCheck(rootfp, searchfp string) string {
+	if _, ok := FileExists(searchfp); !ok {
+		rfp := GetFileDir(rootfp) + "/" + searchfp
+		if _, ok := FileExists(rfp); ok {
+			return rfp
+		} else {
+			panic(searchfp + " cannot be found")
+		}
+	}
+	return searchfp
+}
